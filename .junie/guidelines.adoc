@@ -1,0 +1,167 @@
+= Guidelines
+
+== Radio Guyana Player Project Guidelines
+
+=== Project Overview
+Radio Guyana Player is a multiplatform application that allows users to stream Guyanese internet radio stations. The application is built using Kotlin Multiplatform and Compose Multiplatform, enabling deployment to multiple platforms including Android, iOS, Desktop (JVM), and Web (WASM JS) from a single codebase.
+
+==== Key Features
+
+* Streaming of Guyanese radio stations
+* Station selection and playback controls
+* Audio visualization with multiple visualization styles
+* Light and dark theme support
+* Cross-platform compatibility
+
+=== Architecture and Design Patterns
+
+==== Kotlin Multiplatform Architecture
+The project follows the Kotlin Multiplatform architecture with the following structure:
+
+* `commonMain`: Contains shared code used across all platforms
+* Platform-specific source sets:
+  * `androidMain`: Android-specific implementations
+  * `iosMain`: iOS-specific implementations
+  * `desktopMain`/`jvmMain`: Desktop/JVM-specific implementations
+  * `wasmJsMain`: Web-specific implementations
+
+==== Expect/Actual Pattern
+
+The project uses Kotlin's expect/actual pattern for platform-specific implementations:
+
+* Common interfaces and expected functions are defined in `commonMain`
+* Platform-specific implementations are provided in the respective platform source sets
+* Examples include `AudioPlayer` and `AudioSpectrum`
+
+==== State Management
+
+* Uses Compose's state management with `remember` and `mutableStateOf`
+* State hoisting pattern for sharing state between components
+* Custom state holders like `ThemeState`, `NavigationState`, and `SettingsState`
+
+==== Navigation
+
+* Custom navigation system using a `NavigationState` class
+* Screen-based navigation with different screens for main content, settings, about, etc.
+
+=== Code Organization and Structure
+
+==== Package Structure
+
+* `gy.roach.radio`: Main package containing core application code
+* `gy.roach.radio.visualizers`: Package for audio visualization implementations
+
+==== Key Components
+
+* `App.kt`: Main application composable and entry point
+* `AudioPlayer.kt`: Interface for audio playback with platform-specific implementations
+* `AudioVisualizer.kt`: Interface for audio visualization with platform-specific implementations
+* Screen components: `MainScreen.kt`, `SettingsScreen.kt`, `AboutScreen.kt`, etc.
+* `Theme.kt` and `Color.kt`: Theming and styling
+
+=== Coding Conventions and Style
+
+==== Compose UI Guidelines
+
+* Use composable functions for UI components
+* Follow the Compose naming conventions (e.g., capitalized composable function names)
+* Use modifiers for layout and styling
+* Implement proper recomposition optimization
+
+==== Error Handling
+
+* Use try-catch blocks for error handling, especially for platform-specific operations
+* Log errors appropriately for debugging
+* Maintain consistent UI state even when errors occur
+
+==== Documentation
+* Use KDoc comments for public functions, classes, and interfaces
+* Document platform-specific behavior and requirements
+* Include parameter descriptions and return value information
+
+=== Platform-Specific Considerations
+
+==== Android
+
+* Uses Android's MediaPlayer for audio playback
+* Implements proper lifecycle management
+* Handles Android-specific permissions and configurations
+
+==== iOS
+
+* Uses iOS-specific audio APIs
+* Implements iOS-style UI elements and interactions
+* Handles background audio playback
+
+==== Desktop
+
+* Uses JLayer for audio playback on desktop platforms
+* Implements desktop-specific window management
+* Supports desktop distribution formats (DMG, MSI, DEB)
+
+==== Web (WASM JS)
+
+* Uses Web Audio API for audio playback
+* Implements web-specific styling and interactions
+* Handles browser compatibility issues
+
+=== Build and Deployment Procedures
+
+==== Build Configuration
+
+* Uses Gradle with Kotlin DSL for build configuration
+* Dependencies managed through version catalogs in `libs.versions.toml`
+* Platform-specific build configurations in `composeApp/build.gradle.kts`
+
+==== Android Build
+
+* Minimum SDK: 24
+* Target SDK: 35
+* Compile SDK: 35
+
+==== iOS Build
+* Supports iOS devices and simulators
+* Uses Xcode project integration
+
+==== Desktop Build
+* Supports distribution formats: DMG (macOS), MSI (Windows), DEB (Linux)
+* Package name: gy.roach.radio
+* Version: 1.0.0
+
+==== Web Build
+* Outputs JavaScript and HTML for web deployment
+* Uses Kotlin/JS and Kotlin/WASM
+
+=== Testing Guidelines
+
+==== Unit Testing
+* Use Kotlin Test for common code testing
+* Use platform-specific testing frameworks for platform-specific code
+* Test each component in isolation
+
+==== UI Testing
+* Use Compose UI testing for UI components
+* Test different screen sizes and configurations
+* Verify proper theme application
+
+==== Platform-Specific Testing
+* Test on all target platforms
+* Verify platform-specific features work correctly
+* Test with different device configurations
+
+=== Contribution Guidelines
+
+==== Code Review Process
+* All changes should be reviewed before merging
+* Verify cross-platform compatibility
+* Ensure code follows project conventions and patterns
+
+==== Adding New Features
+* Implement in `commonMain` when possible
+* Use expect/actual pattern for platform-specific functionality
+* Update documentation for new features
+
+==== Updating Dependencies
+* Update version numbers in `libs.versions.toml`
+* Test thoroughly on all platforms after dependency updates
+* Document any breaking changes or migration steps
