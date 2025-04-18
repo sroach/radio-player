@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background - gradient from blue to teal -->
+    <defs>
+        <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#1976D2"/>
+            <stop offset="100%" stop-color="#03DAC5"/>
+        </linearGradient>
+        
+        <!-- Dark mode gradient -->
+        <linearGradient id="bgGradientDark" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#121212"/>
+            <stop offset="100%" stop-color="#1E1E1E"/>
+        </linearGradient>
+    </defs>
+    
+    <!-- Light mode background (default) -->
+    <circle cx="256" cy="256" r="256" fill="url(#bgGradient)" class="light-mode"/>
+    
+    <!-- Dark mode background (hidden by default) -->
+    <circle cx="256" cy="256" r="256" fill="url(#bgGradientDark)" class="dark-mode" style="display:none"/>
+    
+    <!-- Radio body -->
+    <rect x="128" y="176" width="256" height="160" rx="16" ry="16" fill="#FFFFFF" class="light-mode"/>
+    <rect x="128" y="176" width="256" height="160" rx="16" ry="16" fill="#90CAF9" class="dark-mode" style="display:none"/>
+    
+    <!-- Radio display -->
+    <rect x="144" y="192" width="224" height="48" rx="4" ry="4" fill="#121212"/>
+    
+    <!-- Radio antenna -->
+    <line x1="256" y1="176" x2="256" y2="128" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" class="light-mode"/>
+    <line x1="256" y1="176" x2="256" y2="128" stroke="#03DAC5" stroke-width="8" stroke-linecap="round" class="dark-mode" style="display:none"/>
+    
+    <!-- Radio controls -->
+    <circle cx="176" cy="272" r="24" fill="#03DAC5"/>
+    <circle cx="256" cy="272" r="24" fill="#03DAC5"/>
+    <circle cx="336" cy="272" r="24" fill="#03DAC5"/>
+    
+
+    <!-- Guyana flag element - triangle pattern in bottom left -->
+        <path d="m 30,160 v 100 l 50,-50 z" fill="#fcfcfc" stroke="#6cadde"/>
+        <path d="m 40,160 v 100 l 50,-50 z" fill="#009739" stroke="#6cadde"/>
+        <path d="m 50,160 v 100 l 50,-50 z" fill="#FFD100" stroke="#6cadde"/>
+        <path d="m 60,160 v 100 l 50,-50 z" fill="#000000" stroke="#6cadde"/>
+        <path d="m 70,160 v 100 l 50,-50 z" fill="#EF3340" stroke="#6cadde"/>
+
+
+    <!-- Style for theme switching -->
+    <style>
+        @media (prefers-color-scheme: dark) {
+            .light-mode { display: none; }
+            .dark-mode { display: block; }
+        }
+    </style>
+</svg>

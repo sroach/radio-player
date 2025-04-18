@@ -1,0 +1,53 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="512dp"
+    android:height="512dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+    
+    <!-- Background gradient -->
+    <path
+        android:pathData="M256,256m-256,0a256,256 0,1 1,512 0a256,256 0,1 1,-512 0"
+        android:fillColor="#1976D2"/>
+    
+    <!-- Radio body -->
+    <path
+        android:pathData="M128,176h256v160h-256z"
+        android:fillColor="#FFFFFF"/>
+    
+    <!-- Radio display -->
+    <path
+        android:pathData="M144,192h224v48h-224z"
+        android:fillColor="#121212"/>
+    
+    <!-- Radio antenna -->
+    <path
+        android:pathData="M256,176L256,128"
+        android:strokeWidth="8"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"/>
+    
+    <!-- Radio controls -->
+    <path
+        android:pathData="M176,272m-24,0a24,24 0,1 1,48 0a24,24 0,1 1,-48 0"
+        android:fillColor="#03DAC5"/>
+    <path
+        android:pathData="M256,272m-24,0a24,24 0,1 1,48 0a24,24 0,1 1,-48 0"
+        android:fillColor="#03DAC5"/>
+    <path
+        android:pathData="M336,272m-24,0a24,24 0,1 1,48 0a24,24 0,1 1,-48 0"
+        android:fillColor="#03DAC5"/>
+    
+    <!-- Guyana flag element - triangle pattern in bottom left -->
+    <path
+        android:pathData="M128,336L176,336L128,288z"
+        android:fillColor="#009739"/>
+    <path
+        android:pathData="M136,336L184,336L136,288z"
+        android:fillColor="#FFD100"/>
+    <path
+        android:pathData="M144,336L192,336L144,288z"
+        android:fillColor="#000000"/>
+    <path
+        android:pathData="M152,336L200,336L152,288z"
+        android:fillColor="#EF3340"/>
+</vector>
