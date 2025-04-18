@@ -20,6 +20,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import radio_guyana_player.composeapp.generated.resources.Res
 import radio_guyana_player.composeapp.generated.resources.favicon
+import radio_guyana_player.composeapp.generated.resources.flag_gy
 import radio_guyana_player.composeapp.generated.resources.radio_icon
 
 @Preview
@@ -84,9 +85,14 @@ fun App(themeState: ThemeState? = null) {
                                         }
                                     )
 
+                                    Image(
+                                        painter = painterResource(Res.drawable.flag_gy),
+                                        contentDescription = "Flag",
+                                    )
+
                                     // Application title text
                                     Text(
-                                        text = "🇬🇾Guyanese Internet Radio Stations Player",
+                                        text = "Guyanese Internet Radio",
                                         style = MaterialTheme.typography.h6,
                                         color = MaterialTheme.colors.onSurface
                                     )
@@ -98,6 +104,7 @@ fun App(themeState: ThemeState? = null) {
                                     Icon(
                                         imageVector = Icons.Default.Settings,
                                         contentDescription = "Settings",
+                                        tint = MaterialTheme.colors.onSurface
                                     )
                                 }
 
@@ -108,6 +115,7 @@ fun App(themeState: ThemeState? = null) {
                                     Icon(
                                         imageVector = Icons.Default.Info,
                                         contentDescription = "About",
+                                        tint = MaterialTheme.colors.onSurface
                                     )
 
                                 }
@@ -272,7 +280,7 @@ fun App(themeState: ThemeState? = null) {
                             audioPlayer = audioPlayer,
                             selectedStationIndex = selectedStationIndex,
                             settingsState = settingsState,
-                            onStationSelected = { newIndex -> 
+                            onStationSelected = { newIndex ->
                                 // If selecting a different station while one is playing,
                                 // stop the current one first
                                 if (isPlaying && selectedStationIndex != newIndex) {

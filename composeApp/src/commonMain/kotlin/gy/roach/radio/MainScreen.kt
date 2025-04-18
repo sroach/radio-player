@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
  *
  * @param audioPlayer The audio player to use for playback
  * @param selectedStationIndex The index of the currently selected station
+ * @param isPlaying Whether audio is currently playing
  * @param settingsState The state object that holds settings preferences
  * @param onStationSelected Callback when a station is selected
  * @param onNavigateToAbout Callback to navigate to the about screen
@@ -43,25 +44,14 @@ import androidx.compose.ui.unit.sp
 fun MainScreen(
     audioPlayer: AudioPlayer,
     selectedStationIndex: Int = 0,
+    isPlaying: Boolean = false,
     settingsState: SettingsState,
     onStationSelected: (Int) -> Unit = {},
     onNavigateToAbout: () -> Unit,
     onNavigateToSettings: () -> Unit
 ) {
-    // Audio player state
-    var isPlaying by remember { mutableStateOf(false) }
     val station = remember { Station() }
     val selectedStation = remember(selectedStationIndex) { station.item(selectedStationIndex) }
-
-    // Update isPlaying state when the component is recomposed or when selectedStationIndex changes
-    LaunchedEffect(Unit, selectedStationIndex) {
-        try {
-            isPlaying = audioPlayer.isPlaying()
-        } catch (e: Exception) {
-            println("Error checking isPlaying: ${e.message}")
-            isPlaying = false
-        }
-    }
 
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         remember { Greeting().greet() }
