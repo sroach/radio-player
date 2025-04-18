@@ -28,7 +28,7 @@ class SettingsState {
     /**
      * The currently selected visualizer type.
      */
-    var visualizerType by mutableStateOf(VisualizerType.LAVA_LAMP)
+    var visualizerType by mutableStateOf(VisualizerType.BOUNCING_BALLS)
         private set
 
     /**

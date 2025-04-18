@@ -46,7 +46,7 @@ fun SettingsScreen(
 
             // List of available visualizers
             val visualizers = listOf(
-                VisualizerOption("Ballons", VisualizerType.BOUNCING_BALLS),
+                VisualizerOption("Balloons", VisualizerType.BOUNCING_BALLS),
                 VisualizerOption("Lava Lamp", VisualizerType.LAVA_LAMP),
                 VisualizerOption("Wave", VisualizerType.WAVE),
                 VisualizerOption("Equalizer", VisualizerType.EQUALIZER),
