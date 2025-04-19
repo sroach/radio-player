@@ -18,7 +18,8 @@ enum class VisualizerType {
     BAR,
     CIRCLE,
     FIREWORKS,
-    BOUNCING_BALLS
+    BOUNCING_BALLS,
+    SPECTRUM
 }
 
 /**
@@ -65,5 +66,6 @@ fun SelectedVisualizer(
         VisualizerType.CIRCLE -> CircleVisualizer(isPlaying = isPlaying, modifier = modifier)
         VisualizerType.FIREWORKS -> FireworksVisualizer(isPlaying = isPlaying, modifier = modifier)
         VisualizerType.BOUNCING_BALLS -> BalloonsVisualizer(isPlaying = isPlaying, modifier = modifier)
+        VisualizerType.SPECTRUM -> SpectrumVisualizer(isPlaying = isPlaying, modifier = modifier)
     }
 }

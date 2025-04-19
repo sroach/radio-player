@@ -40,6 +40,7 @@ fun SettingsScreen(
                 Text(
                     text = "Visualizer Settings",
                     style = MaterialTheme.typography.h6,
+                    color = MaterialTheme.colors.onSurface,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
             }
@@ -52,7 +53,8 @@ fun SettingsScreen(
                 VisualizerOption("Equalizer", VisualizerType.EQUALIZER),
                 VisualizerOption("Bar", VisualizerType.BAR),
                 VisualizerOption("Circle", VisualizerType.CIRCLE),
-                VisualizerOption("Fireworks", VisualizerType.FIREWORKS)
+                VisualizerOption("Fireworks", VisualizerType.FIREWORKS),
+                VisualizerOption("Spectrum", VisualizerType.SPECTRUM)
             )
 
             items(visualizers) { option ->
@@ -148,12 +150,13 @@ fun SettingsTopBar(
     onNavigateToMain: () -> Unit
 ) {
     TopAppBar(
-        title = { Text("Settings") },
+        title = { Text("Settings",color = MaterialTheme.colors.onSurface,) },
         navigationIcon = {
             IconButton(onClick = onNavigateToMain) {
                 Icon(
                     imageVector = Icons.Default.Home,
                     contentDescription = "Home",
+                    tint = MaterialTheme.colors.onSurface
                 )
             }
         },

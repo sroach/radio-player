@@ -67,6 +67,7 @@ fun MainScreen(
                 Text(
                     text = "Select a Radio Station",
                     style = MaterialTheme.typography.h6,
+                    color = MaterialTheme.colors.onSurface,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
@@ -209,13 +210,14 @@ fun MainBottomBar(
                         if(isPlaying) {
                             Icon(
                                 imageVector = Icons.Filled.StopCircle,
-                                contentDescription = "Play Arrow Icon"
+                                contentDescription = "Play Arrow Icon",
+                                tint = MaterialTheme.colors.onSurface
                             )
                         } else {
                             Icon(
                                 imageVector = Icons.Rounded.PlayCircle,
                                 contentDescription = "Done Icon",
-                                tint = Color.Blue
+                                tint = MaterialTheme.colors.onSurface
                             )
                         }
 

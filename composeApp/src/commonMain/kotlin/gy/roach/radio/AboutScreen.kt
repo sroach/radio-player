@@ -56,6 +56,7 @@ fun AboutScreen(
             text = "Radio Guyana Player",
             style = MaterialTheme.typography.h4,
             fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colors.onBackground,
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
@@ -83,13 +84,15 @@ fun AboutScreen(
                     text = "About",
                     style = MaterialTheme.typography.h5,
                     fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colors.onSurface,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
                 Text(
                     text = "Radio Guyana Player is a multiplatform application that allows you to listen to various Guyanese radio stations. The app provides access to a curated list of radio stations broadcasting Guyanese music, news, and entertainment.",
                     style = MaterialTheme.typography.body1,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                 )
             }
         }
@@ -110,12 +113,14 @@ fun AboutScreen(
                     text = "Features",
                     style = MaterialTheme.typography.h5,
                     fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colors.onSurface,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
                 Text(
                     text = "• Listen to multiple Guyanese radio stations\n• Easy station selection\n• Audio visualization\n• Dark and light theme support\n• iOS-inspired design",
-                    style = MaterialTheme.typography.body1
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                 )
             }
         }
@@ -136,12 +141,14 @@ fun AboutScreen(
                     text = "Release Notes",
                     style = MaterialTheme.typography.h5,
                     fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colors.onSurface,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
                 Text(
                     text = "Check out the latest features and updates in our release notes.",
                     style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
@@ -174,12 +181,14 @@ fun AboutScreen(
                     text = "Credits",
                     style = MaterialTheme.typography.h5,
                     fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colors.onSurface,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
                 Text(
                     text = "Developed with Kotlin Multiplatform and Compose Multiplatform.\n\nAll radio stations are property of their respective owners.",
-                    style = MaterialTheme.typography.body1
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                 )
             }
         }
@@ -200,7 +209,8 @@ fun AboutScreen(
                     text = "Developer",
                     style = MaterialTheme.typography.h5,
                     fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    color = MaterialTheme.colors.onSurface
                 )
 
                 // Clickable website link
@@ -210,7 +220,8 @@ fun AboutScreen(
                 ) {
                     Text(
                         text = "Visit our website: ",
-                        style = MaterialTheme.typography.body1
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
                     )
                     Text(
                         text = "https://roach.gy",
@@ -258,6 +269,7 @@ fun AboutTopBar(
 
                 Icon(
                     imageVector = Icons.Default.Home,
+                    tint = MaterialTheme.colors.onSurface,
                     contentDescription = "Home",
                 )
             }
