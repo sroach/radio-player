@@ -54,6 +54,41 @@ fun ReleaseNotesScreen(
                 modifier = Modifier.padding(16.dp)
             ) {
                 Text(
+                    text = "Version 1.1",
+                    style = MaterialTheme.typography.h5,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colors.onSurface,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                Text(
+                    text = "New features and improvements:",
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                Text(
+                    text = "• Added station type filtering\n• Improved audio playback stability\n• Enhanced visualization effects\n• Added more Guyanese radio stations\n• Optimized performance on all platforms\n• Fixed UI issues on different screen sizes",
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                )
+            }
+        }
+
+        // Version 1.0
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            elevation = 0.dp,
+            shape = RoundedCornerShape(10.dp),
+            backgroundColor = MaterialTheme.colors.surface
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
                     text = "Version 1.0",
                     style = MaterialTheme.typography.h5,
                     fontWeight = FontWeight.SemiBold,

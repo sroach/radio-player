@@ -62,7 +62,7 @@ fun AboutScreen(
 
         // App version
         Text(
-            text = "Version 1.0",
+            text = "Version 1.1",
             style = MaterialTheme.typography.subtitle1,
             color = MaterialTheme.colors.onBackground.copy(alpha = 0.7f),
             modifier = Modifier.padding(bottom = 24.dp)

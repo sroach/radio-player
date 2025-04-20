@@ -383,7 +383,7 @@ fun StationItemCard(
 
                     // Subtitle with iOS styling
                     Text(
-                        text = stationItem.type,
+                        text = stationItem.typeAsString(),
                         style = MaterialTheme.typography.body2, // Using iOS-inspired typography from Theme.kt
                         color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f) // iOS uses slightly more transparent secondary text
                     )

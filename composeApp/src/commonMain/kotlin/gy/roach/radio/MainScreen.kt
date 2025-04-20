@@ -53,6 +53,25 @@ fun MainScreen(
     val station = remember { Station() }
     val selectedStation = remember(selectedStationIndex) { station.item(selectedStationIndex) }
 
+    // Extract unique station types
+    val allStationTypes = remember {
+        station.array.flatMap { it.type }.map { it.trim().lowercase() }.distinct().sorted()
+    }
+
+    // State for selected station type filter
+    var selectedStationType by remember { mutableStateOf<String?>(null) }
+
+    // Filter stations based on selected type
+    val filteredStations = remember(selectedStationType) {
+        if (selectedStationType == null) {
+            station.array
+        } else {
+            station.array.filter { stationItem ->
+                stationItem.type.any { it.trim().lowercase() == selectedStationType }
+            }
+        }
+    }
+
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         remember { Greeting().greet() }
 
@@ -71,11 +90,47 @@ fun MainScreen(
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
+                // Station type filter chips
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "Filter by Type:",
+                        style = MaterialTheme.typography.subtitle2,
+                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+
+                    // Scrollable row of filter chips
+                    androidx.compose.foundation.lazy.LazyRow(
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        // "All" filter chip
+                        item {
+                            StationTypeChip(
+                                text = "All",
+                                selected = selectedStationType == null,
+                                onClick = { selectedStationType = null }
+                            )
+                        }
+
+                        // Type filter chips
+                        items(allStationTypes) { type ->
+                            StationTypeChip(
+                                text = type.replaceFirstChar { it.uppercase() },
+                                selected = selectedStationType == type,
+                                onClick = { 
+                                    selectedStationType = if (selectedStationType == type) null else type
+                                }
+                            )
+                        }
+                    }
+                }
+
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth().fillMaxHeight(),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(station.array) { stationItem ->
+                    items(filteredStations) { stationItem ->
                         StationItemCard(
                             stationItem = stationItem,
                             isSelected = stationItem.index == selectedStationIndex,
@@ -89,6 +144,40 @@ fun MainScreen(
                 }
             }
         }
+    }
+}
+
+/**
+ * Custom chip component for station type filtering.
+ *
+ * @param text The text to display in the chip
+ * @param selected Whether the chip is selected
+ * @param onClick Callback when the chip is clicked
+ */
+@Composable
+fun StationTypeChip(
+    text: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    Surface(
+        modifier = Modifier
+            .clip(RoundedCornerShape(16.dp))
+            .clickable(onClick = onClick),
+        color = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.surface,
+        contentColor = if (selected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface,
+        elevation = if (selected) 4.dp else 1.dp,
+        shape = RoundedCornerShape(16.dp),
+        border = androidx.compose.foundation.BorderStroke(
+            width = 1.dp,
+            color = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface.copy(alpha = 0.12f)
+        )
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.body2,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+        )
     }
 }
 
@@ -188,7 +277,7 @@ fun MainBottomBar(
                             color = MaterialTheme.colors.onSurface
                         )
                         Text(
-                            text = selectedStation.type,
+                            text = selectedStation.typeAsString(),
                             style = MaterialTheme.typography.caption,
                             color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                         )
