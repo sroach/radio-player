@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
@@ -37,6 +38,7 @@ import androidx.compose.ui.unit.sp
  * @param isPlaying Whether audio is currently playing
  * @param settingsState The state object that holds settings preferences
  * @param onStationSelected Callback when a station is selected
+ * @param onPlayingStateChanged Callback when the playing state changes
  * @param onNavigateToAbout Callback to navigate to the about screen
  * @param onNavigateToSettings Callback to navigate to the settings screen
  */
@@ -47,6 +49,7 @@ fun MainScreen(
     isPlaying: Boolean = false,
     settingsState: SettingsState,
     onStationSelected: (Int) -> Unit = {},
+    onPlayingStateChanged: (Boolean) -> Unit = {},
     onNavigateToAbout: () -> Unit,
     onNavigateToSettings: () -> Unit
 ) {
@@ -58,16 +61,18 @@ fun MainScreen(
         station.array.flatMap { it.type }.map { it.trim().lowercase() }.distinct().sorted()
     }
 
-    // State for selected station type filter
-    var selectedStationType by remember { mutableStateOf<String?>(null) }
+    // State for selected station type filters
+    var selectedStationTypes by remember { mutableStateOf<Set<String>>(emptySet()) }
 
-    // Filter stations based on selected type
-    val filteredStations = remember(selectedStationType) {
-        if (selectedStationType == null) {
+    // Filter stations based on selected types
+    val filteredStations = remember(selectedStationTypes) {
+        if (selectedStationTypes.isEmpty()) {
             station.array
         } else {
             station.array.filter { stationItem ->
-                stationItem.type.any { it.trim().lowercase() == selectedStationType }
+                stationItem.type.any { type -> 
+                    selectedStationTypes.contains(type.trim().lowercase())
+                }
             }
         }
     }
@@ -108,8 +113,8 @@ fun MainScreen(
                         item {
                             StationTypeChip(
                                 text = "All",
-                                selected = selectedStationType == null,
-                                onClick = { selectedStationType = null }
+                                selected = selectedStationTypes.isEmpty(),
+                                onClick = { selectedStationTypes = emptySet() }
                             )
                         }
 
@@ -117,9 +122,13 @@ fun MainScreen(
                         items(allStationTypes) { type ->
                             StationTypeChip(
                                 text = type.replaceFirstChar { it.uppercase() },
-                                selected = selectedStationType == type,
+                                selected = selectedStationTypes.contains(type),
                                 onClick = { 
-                                    selectedStationType = if (selectedStationType == type) null else type
+                                    selectedStationTypes = if (selectedStationTypes.contains(type)) {
+                                        selectedStationTypes - type
+                                    } else {
+                                        selectedStationTypes + type
+                                    }
                                 }
                             )
                         }
@@ -138,6 +147,32 @@ fun MainScreen(
                             audioPlayer = audioPlayer,
                             onClick = {
                                 onStationSelected(stationItem.index)
+                            },
+                            onPlayPauseClick = {
+                                // First select the station if it's not already selected
+                                if (stationItem.index != selectedStationIndex) {
+                                    onStationSelected(stationItem.index)
+                                }
+
+                                // Then toggle play/pause
+                                try {
+                                    if (isPlaying && stationItem.index == selectedStationIndex) {
+                                        audioPlayer.stop()
+                                        onPlayingStateChanged(false)
+                                    } else {
+                                        // Make sure we have a valid URL
+                                        if (stationItem.url.isNotBlank()) {
+                                            audioPlayer.play(stationItem.url)
+                                            onPlayingStateChanged(true)
+                                        } else {
+                                            println("Error: Station URL is blank")
+                                        }
+                                    }
+                                } catch (e: Exception) {
+                                    println("Error toggling playback: ${e.message}")
+                                    // Reset state to ensure UI is consistent
+                                    onPlayingStateChanged(audioPlayer.isPlaying())
+                                }
                             }
                         )
                     }
@@ -182,13 +217,14 @@ fun StationTypeChip(
 }
 
 /**
- * Bottom bar with play/stop control, navigation, and equalizer visualizer.
+ * Bottom bar with station info and equalizer visualizer.
  *
  * @param selectedStation The currently selected station
  * @param isPlaying Whether audio is currently playing
  * @param audioPlayer The audio player to use for playback
  * @param settingsState The state object that holds settings preferences
- * @param onPlayPauseClick Callback when the play/pause button is clicked
+ * @param onNavigateToSettings Callback to navigate to settings screen
+ * @param onNavigateToAbout Callback to navigate to about screen
  */
 @Composable
 fun MainBottomBar(
@@ -196,7 +232,8 @@ fun MainBottomBar(
     isPlaying: Boolean,
     audioPlayer: AudioPlayer,
     settingsState: SettingsState,
-    onPlayPauseClick: () -> Unit
+    onNavigateToSettings: () -> Unit = {},
+    onNavigateToAbout: () -> Unit = {}
 ) {
     // State to control equalizer visibility
     var isEqualizerVisible by remember { mutableStateOf(false) }
@@ -283,34 +320,22 @@ fun MainBottomBar(
                         )
                     }
 
-                    // Play/Stop button - iOS style
-                    // Define iOS system green color for play button
-                    val iosGreen = Color(0xFF34C759) // iOS system green
-                    val iosRed = MaterialTheme.colors.error // Using the iOS red from theme
+                    // Settings button
+                    IconButton(onClick = onNavigateToSettings) {
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = "Settings",
+                            tint = MaterialTheme.colors.onSurface
+                        )
+                    }
 
-                    Box(
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .size(44.dp) // iOS standard control size
-                            .background(if (isPlaying) iosRed else iosGreen)
-                            .clickable(onClick = onPlayPauseClick),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        if(isPlaying) {
-                            Icon(
-                                imageVector = Icons.Filled.StopCircle,
-                                contentDescription = "Play Arrow Icon",
-                                tint = MaterialTheme.colors.onSurface
-                            )
-                        } else {
-                            Icon(
-                                imageVector = Icons.Rounded.PlayCircle,
-                                contentDescription = "Done Icon",
-                                tint = MaterialTheme.colors.onSurface
-                            )
-                        }
-
-
+                    // About button
+                    IconButton(onClick = onNavigateToAbout) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = "About",
+                            tint = MaterialTheme.colors.onSurface
+                        )
                     }
                 }
             }

@@ -1,5 +1,6 @@
 package gy.roach.radio
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,6 +10,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.StopCircle
+import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -99,27 +102,6 @@ fun App(themeState: ThemeState? = null) {
                                 }
                             },
                             actions = {
-                                // Settings button in TopAppBar actions area
-                                IconButton(onClick = { navigationState.navigateToSettings() }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Settings,
-                                        contentDescription = "Settings",
-                                        tint = MaterialTheme.colors.onSurface
-                                    )
-                                }
-
-                                // About button in TopAppBar actions area
-                                IconButton(onClick = { navigationState.navigateToAbout() }) {
-                                    // iOS-style info icon
-
-                                    Icon(
-                                        imageVector = Icons.Default.Info,
-                                        contentDescription = "About",
-                                        tint = MaterialTheme.colors.onSurface
-                                    )
-
-                                }
-
                                 // Theme toggle in TopAppBar actions area - iOS style
                                 IconButton(
                                     onClick = { currentThemeState.toggleTheme() }
@@ -240,26 +222,8 @@ fun App(themeState: ThemeState? = null) {
                             isPlaying = isPlaying,
                             audioPlayer = audioPlayer,
                             settingsState = settingsState,
-                            onPlayPauseClick = {
-                                try {
-                                    if (isPlaying) {
-                                        audioPlayer.stop()
-                                        isPlaying = false
-                                    } else {
-                                        // Make sure we have a valid URL
-                                        if (selectedStation.url.isNotBlank()) {
-                                            audioPlayer.play(selectedStation.url)
-                                            isPlaying = true
-                                        } else {
-                                            println("Error: Station URL is blank")
-                                        }
-                                    }
-                                } catch (e: Exception) {
-                                    println("Error toggling playback: ${e.message}")
-                                    // Reset state to ensure UI is consistent
-                                    isPlaying = audioPlayer.isPlaying()
-                                }
-                            }
+                            onNavigateToSettings = { navigationState.navigateToSettings() },
+                            onNavigateToAbout = { navigationState.navigateToAbout() }
                         )
                     }
                 }
@@ -279,6 +243,7 @@ fun App(themeState: ThemeState? = null) {
                         MainScreen(
                             audioPlayer = audioPlayer,
                             selectedStationIndex = selectedStationIndex,
+                            isPlaying = isPlaying,
                             settingsState = settingsState,
                             onStationSelected = { newIndex ->
                                 // If selecting a different station while one is playing,
@@ -288,6 +253,9 @@ fun App(themeState: ThemeState? = null) {
                                     isPlaying = false
                                 }
                                 selectedStationIndex = newIndex
+                            },
+                            onPlayingStateChanged = { newIsPlaying ->
+                                isPlaying = newIsPlaying
                             },
                             onNavigateToAbout = { navigationState.navigateToAbout() },
                             onNavigateToSettings = { navigationState.navigateToSettings() }
@@ -322,14 +290,27 @@ fun StationItemCard(
     isSelected: Boolean = false,
     isPlaying: Boolean = false,
     audioPlayer: AudioPlayer? = null,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    onPlayPauseClick: () -> Unit = {}
 ) {
+    // State to track whether the play/stop button is visible
+    var isPlayStopVisible by remember { mutableStateOf(false) }
+
+    // Define iOS system green color for play button
+    val iosGreen = Color(0xFF34C759) // iOS system green
+    val iosRed = MaterialTheme.colors.error // Using the iOS red from theme
+
     // iOS-inspired card with subtle styling
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 6.dp) // iOS uses more horizontal padding
-            .clickable(onClick = onClick),
+            .clickable {
+                // Toggle visibility of play/stop button on click
+                isPlayStopVisible = !isPlayStopVisible
+                // Also perform the original onClick action
+                onClick()
+            },
         elevation = 0.dp, // iOS uses flat designs without elevation
         shape = androidx.compose.foundation.shape.RoundedCornerShape(10.dp), // iOS typically uses 10dp corner radius
         backgroundColor = if (isSelected) 
@@ -389,18 +370,47 @@ fun StationItemCard(
                     )
                 }
 
-                // iOS-style chevron indicator
-                Text(
-                    text = "›",
-                    style = MaterialTheme.typography.h5.copy(
-                        fontWeight = androidx.compose.ui.text.font.FontWeight.Light
-                    ),
-                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.3f),
-                    modifier = Modifier.padding(start = 8.dp)
-                )
-            }
+                // Play/Stop button - only visible when isPlayStopVisible is true
+                if (isPlayStopVisible && isSelected) {
+                    Box(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .size(44.dp) // iOS standard control size
+                            .background(if (isPlaying) iosRed else iosGreen)
+                            .clickable {
+                                // Call the onPlayPauseClick callback to handle play/stop functionality
+                                onPlayPauseClick()
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if(isPlaying) {
+                            Icon(
+                                imageVector = Icons.Filled.StopCircle,
+                                contentDescription = "Stop Icon",
+                                tint = MaterialTheme.colors.onSurface
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Rounded.PlayCircle,
+                                contentDescription = "Play Icon",
+                                tint = MaterialTheme.colors.onSurface
+                            )
+                        }
+                    }
+                }
 
-            // Equalizer has been moved to the bottom bar
+                // iOS-style chevron indicator - only visible when play/stop button is not visible
+                if (!isPlayStopVisible || !isSelected) {
+                    Text(
+                        text = "›",
+                        style = MaterialTheme.typography.h5.copy(
+                            fontWeight = androidx.compose.ui.text.font.FontWeight.Light
+                        ),
+                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.3f),
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+            }
         }
     }
 }
