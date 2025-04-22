@@ -20,6 +20,18 @@ kotlin {
         }
     }
 
+    // Read API key from local.properties
+    val localPropertiesFile = project.rootProject.file("local.properties")
+    val apiKey = if (localPropertiesFile.exists()) {
+        val properties = localPropertiesFile.readLines()
+            .filter { it.startsWith("stations.api.key=") }
+            .map { it.split("=")[1].trim() }
+            .firstOrNull() ?: ""
+        properties
+    } else {
+        ""
+    }
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -28,6 +40,16 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+
+            // Pass API key to Info.plist
+            embedBitcode = org.jetbrains.kotlin.gradle.plugin.mpp.BitcodeEmbeddingMode.DISABLE
+            freeCompilerArgs += listOf(
+                "-Xbinary=bundleId=gy.roach.radio",
+                "-Xbinary=bundleVersion=1.0",
+                "-Xbinary=bundleShortVersionString=1.0",
+                "-Xbinary=infoPlist=${project.file("src/iosMain/Info.plist").absolutePath}",
+                "-Xbinary=infoPlistKey=STATIONS_API_KEY=$apiKey"
+            )
         }
     }
 
@@ -53,13 +75,56 @@ kotlin {
         binaries.executable()
     }
 
+    // Task to generate config.js file with API key for WASM/Web
+    tasks.register("generateWebConfig") {
+        doLast {
+            // Read API key from local.properties
+            val localPropertiesFile = project.rootProject.file("local.properties")
+            val apiKey = if (localPropertiesFile.exists()) {
+                val properties = localPropertiesFile.readLines()
+                    .filter { it.startsWith("stations.api.key=") }
+                    .map { it.split("=")[1].trim() }
+                    .firstOrNull() ?: ""
+                properties
+            } else {
+                ""
+            }
+
+            // Create the config directory if it doesn't exist
+            val configDir = project.file("src/wasmJsMain/resources/config")
+            configDir.mkdirs()
+
+            // Create the config.js file
+            val configFile = project.file("src/wasmJsMain/resources/config/config.js")
+            configFile.writeText("""
+                // This file is generated during build. Do not edit manually.
+                window.APP_CONFIG = {
+                    STATIONS_API_KEY: "$apiKey"
+                };
+            """.trimIndent())
+
+            println("Generated config.js with API key for WASM/Web")
+        }
+    }
+
+    // Make sure the config file is generated before the WASM/Web build
+    tasks.named("wasmJsBrowserDevelopmentWebpack") {
+        dependsOn("generateWebConfig")
+    }
+
+    tasks.named("wasmJsBrowserProductionWebpack") {
+        dependsOn("generateWebConfig")
+    }
+
     sourceSets {
         val desktopMain by getting
+        val iosMain by creating
+        val wasmJsMain by getting
 
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-
+            implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -75,11 +140,24 @@ kotlin {
             implementation(libs.cupertino)
             implementation(libs.materialKolor)
             implementation(libs.kotlinx.serialization.json)
+
+            // Ktor
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.logging)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.jlayer)
+            implementation(libs.ktor.client.okhttp)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
+        }
+        wasmJsMain.dependencies {
+            implementation(libs.ktor.client.js)
         }
     }
 }
@@ -94,6 +172,26 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+
+        // Read API key from local.properties
+        val isWindows = System.getProperty("os.name").lowercase().contains("windows")
+
+        // Read API key from local.properties
+        val localPropertiesFile = project.rootProject.file("local.properties")
+        val apiKey = if (localPropertiesFile.exists()) {
+            val properties = localPropertiesFile.readLines()
+                .filter { it.startsWith("stations.api.key=") }
+                .map { it.split("=")[1].trim() }
+                .firstOrNull() ?: ""
+            properties
+        } else {
+            ""
+        }
+        buildConfigField("String", "STATIONS_API_KEY", "\"$apiKey\"")
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
     packaging {
         resources {
@@ -121,6 +219,12 @@ dependencies {
 compose.desktop {
     application {
         mainClass = "gy.roach.radio.MainKt"
+
+        // Set the local.properties path as a system property
+        val localPropertiesFile = project.rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            jvmArgs("-Dlocal.properties.path=${localPropertiesFile.absolutePath}")
+        }
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)

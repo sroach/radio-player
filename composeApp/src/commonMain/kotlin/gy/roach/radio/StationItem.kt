@@ -1,5 +1,13 @@
 package gy.roach.radio
 
+import gy.roach.radio.repository.StationsRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 /**
@@ -34,11 +42,46 @@ data class StationItem(
  * Class that manages the list of radio stations.
  */
 class Station {
-    // Load stations from JSON
-    val array: List<StationItem> = loadStationsFromJson()
+    private val repository = StationsRepository()
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
+    // Use a StateFlow to hold the stations list
+    private val _stationsFlow = MutableStateFlow<List<StationItem>>(emptyList())
+    val stationsFlow: StateFlow<List<StationItem>> = _stationsFlow.asStateFlow()
+
+    // For backward compatibility, provide direct access to the current list
+    val array: List<StationItem>
+        get() = _stationsFlow.value
+
+    init {
+        // Load stations from hardcoded JSON as initial data
+        val initialStations = loadStationsFromJson()
+        _stationsFlow.value = initialStations
+
+        // Then try to fetch from API
+        fetchStationsFromApi()
+    }
 
     /**
-     * Loads the stations from the JSON data.
+     * Fetches stations from the API.
+     */
+    private fun fetchStationsFromApi() {
+        scope.launch {
+            try {
+                val stations = repository.getStations()
+                if (stations.isNotEmpty()) {
+                    _stationsFlow.value = stations
+                }
+            } catch (e: Exception) {
+                println("Error fetching stations from API: ${e.message}")
+                // Keep using the hardcoded stations if API fails
+            }
+        }
+    }
+
+    /**
+     * Loads the stations from the hardcoded JSON data.
+     * This serves as a fallback if the API is unavailable.
      * 
      * @return A list of StationItem objects
      */
@@ -58,6 +101,7 @@ class Station {
          * This data is stored as a string constant for simplicity.
          * In a production environment, this would be loaded from an external file.
          */
+        //language=JSON
         private const val STATIONS_JSON = """
             [
               {
