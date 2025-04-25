@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.StopCircle
 import androidx.compose.material.icons.rounded.PlayArrow
@@ -56,6 +57,9 @@ fun MainScreen(
     val station = remember { Station() }
     val selectedStation = remember(selectedStationIndex) { station.item(selectedStationIndex) }
 
+    // Collect the isRefreshing state
+    val isRefreshing by station.isRefreshing.collectAsState()
+
     // Extract unique station types
     val allStationTypes = remember {
         station.array.flatMap { it.type }.map { it.trim().lowercase() }.distinct().sorted()
@@ -87,13 +91,40 @@ fun MainScreen(
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Single column scrollable list of stations
-                Text(
-                    text = "Select a Radio Station",
-                    style = MaterialTheme.typography.h6,
-                    color = MaterialTheme.colors.onSurface,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
+                // Header row with title and refresh button
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Title
+                    Text(
+                        text = "Select a Radio Station",
+                        style = MaterialTheme.typography.h6,
+                        color = MaterialTheme.colors.onSurface
+                    )
+
+                    // Refresh button
+                    IconButton(
+                        onClick = { station.refreshStations() },
+                        enabled = !isRefreshing
+                    ) {
+                        if (isRefreshing) {
+                            // Show a circular progress indicator when refreshing
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(24.dp),
+                                strokeWidth = 2.dp
+                            )
+                        } else {
+                            // Show refresh icon when not refreshing
+                            Icon(
+                                imageVector = Icons.Default.Refresh,
+                                contentDescription = "Refresh Stations",
+                                tint = MaterialTheme.colors.primary
+                            )
+                        }
+                    }
+                }
 
                 // Station type filter chips
                 Column(modifier = Modifier.fillMaxWidth()) {

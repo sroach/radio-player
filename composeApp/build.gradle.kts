@@ -152,6 +152,8 @@ kotlin {
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.jlayer)
             implementation(libs.ktor.client.okhttp)
+            // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+            implementation("org.slf4j:slf4j-api:2.0.17")
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
