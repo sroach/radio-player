@@ -136,7 +136,6 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation("org.jetbrains.compose.material:material-icons-extended:${libs.versions.compose.multiplatform.get()}")
             implementation(libs.cupertino)
             implementation(libs.materialKolor)
             implementation(libs.kotlinx.serialization.json)
@@ -146,6 +145,9 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.logging)
+            // icon extended
+            implementation(libs.material.icons.core)
+            implementation(libs.material.icons.extended)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -153,7 +155,7 @@ kotlin {
             implementation(libs.jlayer)
             implementation(libs.ktor.client.okhttp)
             // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
-            implementation("org.slf4j:slf4j-api:2.0.17")
+            implementation(libs.slf4j.api)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

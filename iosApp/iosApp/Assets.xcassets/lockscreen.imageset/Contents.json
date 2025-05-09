@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "guyana_dark 3.png",
+      "filename" : "grp.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,7 +12,7 @@
           "value" : "light"
         }
       ],
-      "filename" : "guyana_dark 6.png",
+      "filename" : "grp.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -23,12 +23,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "guyana_dark.png",
+      "filename" : "grp.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "guyana_dark 4.png",
+      "filename" : "grp.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -39,7 +39,7 @@
           "value" : "light"
         }
       ],
-      "filename" : "guyana_dark 7.png",
+      "filename" : "grp.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -50,12 +50,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "guyana_dark 1.png",
+      "filename" : "grp.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "guyana_dark 5.png",
+      "filename" : "grp.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -66,7 +66,7 @@
           "value" : "light"
         }
       ],
-      "filename" : "guyana_dark 8.png",
+      "filename" : "grp.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -77,7 +77,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "guyana_dark 2.png",
+      "filename" : "grp.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

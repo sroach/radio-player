@@ -12,6 +12,9 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.StopCircle
 import androidx.compose.material.icons.rounded.PlayCircle
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,15 +23,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle.Companion.Italic
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import radio_guyana_player.composeapp.generated.resources.Res
 import radio_guyana_player.composeapp.generated.resources.favicon
 import radio_guyana_player.composeapp.generated.resources.flag_gy
+import radio_guyana_player.composeapp.generated.resources.ic_dark_mode
+import radio_guyana_player.composeapp.generated.resources.ic_light_mode
 import radio_guyana_player.composeapp.generated.resources.radio_icon
+import radio_guyana_player.composeapp.generated.resources.theme
 
 @Preview
 @Composable
-fun App(themeState: ThemeState? = null) {
+fun App(themeState: ThemeState? = null) = AppTheme {
+
     // Use provided theme state or get the current one from composition
     val currentThemeState = themeState ?: rememberThemeState()
 
@@ -37,6 +46,13 @@ fun App(themeState: ThemeState? = null) {
 
     // Settings state
     val settingsState = rememberSettingsState()
+
+    val isDark = currentThemeState.isDarkTheme
+
+    val icon = remember(isDark) {
+        if (isDark) Res.drawable.ic_light_mode
+        else Res.drawable.ic_dark_mode
+    }
 
     // We still need the theme here for the preview and other platforms
     RadioGuyanaTheme(darkTheme = currentThemeState.isDarkTheme) {
@@ -64,140 +80,44 @@ fun App(themeState: ThemeState? = null) {
                         // No top bar for splash screen
                     }
                     is Screen.Main -> {
-                        TopAppBar(
-                            title = {
-                                // Application Title with Favicon in TopAppBar
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    // Favicon image with iOS-style theme awareness
-                                    Image(
-                                        painter = painterResource(Res.drawable.favicon),
-                                        contentDescription = "Favicon",
-                                        modifier = Modifier.size(32.dp).padding(end = 8.dp)
-                                            .aspectRatio(5f/3f),
-                                        colorFilter = if (currentThemeState.isDarkTheme) {
-                                            // In dark mode, use a subtle color filter to make the icon more visible
-                                            androidx.compose.ui.graphics.ColorFilter.lighting(
-                                                add = Color(0xFF0A84FF).copy(alpha = 0.2f), // iOS dark mode blue tint
-                                                multiply = Color.White.copy(alpha = 0.9f)    // Slightly soften
-                                            )
-                                        } else {
-                                            // In light mode, use the original colors
-                                            null
-                                        }
-                                    )
 
-                                    Image(
-                                        painter = painterResource(Res.drawable.flag_gy),
-                                        contentDescription = "Flag",
-                                    )
-
-                                    // Application title text
-                                    Text(
-                                        text = "Guyanese Internet Radio",
-                                        style = MaterialTheme.typography.h6,
-                                        color = MaterialTheme.colors.onSurface
-                                    )
-                                }
-                            },
-                            actions = {
-                                // Theme toggle in TopAppBar actions area - iOS style
+                        Surface(
+                            color = MaterialTheme.colors.background,
+                            tonalElevation = 3.dp
+                        ){
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 16.dp, top = 32.dp, end = 16.dp, bottom = 16.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ){
+                                Image(
+                                    painter = painterResource(Res.drawable.flag_gy),
+                                    contentDescription = "Flag",
+                                )
+                                // Application title text
+                                Text(
+                                    text = "Guyanese Internet Radio",
+                                    style = MaterialTheme.typography.h6,
+                                    color = MaterialTheme.colors.onSurface
+                                )
+                                // Theme toggle
                                 IconButton(
-                                    onClick = { currentThemeState.toggleTheme() }
+                                    onClick = { currentThemeState.toggleTheme()},
+                                    colors = IconButtonDefaults.iconButtonColors(
+                                        contentColor = Color(0xFFBB86FC).copy(alpha = 0.85f)
+                                    )
                                 ) {
-                                    // Use a surface with a circular shape to create a nice toggle button
-                                    Surface(
-                                        shape = androidx.compose.foundation.shape.CircleShape,
-                                        color = if (currentThemeState.isDarkTheme)
-                                                   MaterialTheme.colors.surface
-                                                else
-                                                   MaterialTheme.colors.surface,
-                                        modifier = Modifier.size(32.dp)
-                                    ) {
-                                        // Center the icon
-                                        Box(
-                                            contentAlignment = Alignment.Center,
-                                            modifier = Modifier.fillMaxSize()
-                                        ) {
-                                            // iOS-style theme toggle icon
-                                            if (currentThemeState.isDarkTheme) {
-                                                // Sun icon for light mode (when in dark mode)
-                                                Box(
-                                                    modifier = Modifier.size(24.dp),
-                                                    contentAlignment = Alignment.Center
-                                                ) {
-                                                    // Sun circle
-                                                    Box(
-                                                        modifier = Modifier
-                                                            .size(12.dp)
-                                                            .background(Color(0xFFFF9500), CircleShape)
-                                                    )
 
-                                                    // Sun rays
-                                                    Box(modifier = Modifier.fillMaxSize()) {
-                                                        // Top ray
-                                                        Box(
-                                                            modifier = Modifier
-                                                                .width(2.dp)
-                                                                .height(5.dp)
-                                                                .background(Color(0xFFFF9500))
-                                                                .align(Alignment.TopCenter)
-                                                        )
-                                                        // Bottom ray
-                                                        Box(
-                                                            modifier = Modifier
-                                                                .width(2.dp)
-                                                                .height(5.dp)
-                                                                .background(Color(0xFFFF9500))
-                                                                .align(Alignment.BottomCenter)
-                                                        )
-                                                        // Left ray
-                                                        Box(
-                                                            modifier = Modifier
-                                                                .width(5.dp)
-                                                                .height(2.dp)
-                                                                .background(Color(0xFFFF9500))
-                                                                .align(Alignment.CenterStart)
-                                                        )
-                                                        // Right ray
-                                                        Box(
-                                                            modifier = Modifier
-                                                                .width(5.dp)
-                                                                .height(2.dp)
-                                                                .background(Color(0xFFFF9500))
-                                                                .align(Alignment.CenterEnd)
-                                                        )
-                                                    }
-                                                }
-                                            } else {
-                                                // Moon icon for dark mode (when in light mode)
-                                                Box(
-                                                    modifier = Modifier
-                                                        .size(24.dp)
-                                                        .padding(2.dp)
-                                                ) {
-                                                    // Crescent moon shape using overlapping circles
-                                                    Box(
-                                                        modifier = Modifier
-                                                            .size(20.dp)
-                                                            .background(Color(0xFF8E8E93), CircleShape)
-                                                    )
-                                                    Box(
-                                                        modifier = Modifier
-                                                            .size(16.dp)
-                                                            .background(MaterialTheme.colors.surface, CircleShape)
-                                                            .align(Alignment.CenterEnd)
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    }
+                                    Icon(
+                                        imageVector = vectorResource(icon),
+                                        contentDescription = stringResource(Res.string.theme)
+                                    )
                                 }
-                            },
-                            backgroundColor = MaterialTheme.colors.surface,
-                            elevation = 8.dp
-                        )
+                            }
+                        }
+
                     }
                     is Screen.About -> {
                         AboutTopBar(onNavigateToMain = { navigationState.navigateToMain() })
@@ -293,9 +213,6 @@ fun StationItemCard(
     onClick: () -> Unit = {},
     onPlayPauseClick: () -> Unit = {}
 ) {
-    // State to track whether the play/stop button is visible
-    var isPlayStopVisible by remember { mutableStateOf(false) }
-
     // Define iOS system green color for play button
     val iosGreen = Color(0xFF34C759) // iOS system green
     val iosRed = MaterialTheme.colors.error // Using the iOS red from theme
@@ -306,9 +223,7 @@ fun StationItemCard(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 6.dp) // iOS uses more horizontal padding
             .clickable {
-                // Toggle visibility of play/stop button on click
-                isPlayStopVisible = !isPlayStopVisible
-                // Also perform the original onClick action
+                // Perform the original onClick action
                 onClick()
             },
         elevation = 0.dp, // iOS uses flat designs without elevation
@@ -322,11 +237,17 @@ fun StationItemCard(
             color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f) // Very subtle border typical of iOS
         )
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth()
+        // Two-column layout
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp), // iOS standard padding
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            // First column: Station information (icon and text)
             Row(
-                modifier = Modifier.padding(16.dp), // iOS standard padding
+                modifier = Modifier.weight(1f),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Display the station's icon with iOS-style sizing and theme-aware coloring
@@ -347,9 +268,7 @@ fun StationItemCard(
                 Spacer(modifier = Modifier.width(12.dp)) // iOS uses tighter spacing
 
                 // Display the station's information
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
+                Column {
                     // Title with iOS typography
                     Text(
                         text = stationItem.label,
@@ -369,45 +288,31 @@ fun StationItemCard(
                         color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f) // iOS uses slightly more transparent secondary text
                     )
                 }
+            }
 
-                // Play/Stop button - only visible when isPlayStopVisible is true
-                if (isPlayStopVisible && isSelected) {
-                    Box(
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .size(44.dp) // iOS standard control size
-                            .background(if (isPlaying) iosRed else iosGreen)
-                            .clickable {
-                                // Call the onPlayPauseClick callback to handle play/stop functionality
-                                onPlayPauseClick()
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        if(isPlaying) {
-                            Icon(
-                                imageVector = Icons.Filled.StopCircle,
-                                contentDescription = "Stop Icon",
-                                tint = MaterialTheme.colors.onSurface
-                            )
-                        } else {
-                            Icon(
-                                imageVector = Icons.Rounded.PlayCircle,
-                                contentDescription = "Play Icon",
-                                tint = MaterialTheme.colors.onSurface
-                            )
-                        }
-                    }
-                }
-
-                // iOS-style chevron indicator - only visible when play/stop button is not visible
-                if (!isPlayStopVisible || !isSelected) {
-                    Text(
-                        text = "›",
-                        style = MaterialTheme.typography.h5.copy(
-                            fontWeight = androidx.compose.ui.text.font.FontWeight.Light
-                        ),
-                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.3f),
-                        modifier = Modifier.padding(start = 8.dp)
+            // Second column: Play/Stop button (always visible)
+            Box(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(44.dp) // iOS standard control size
+                    .background(if (isPlaying) iosRed else iosGreen)
+                    .clickable {
+                        // Call the onPlayPauseClick callback to handle play/stop functionality
+                        onPlayPauseClick()
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                if(isPlaying) {
+                    Icon(
+                        imageVector = Icons.Filled.StopCircle,
+                        contentDescription = "Stop Icon",
+                        tint = MaterialTheme.colors.onSurface
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Rounded.PlayCircle,
+                        contentDescription = "Play Icon",
+                        tint = MaterialTheme.colors.onSurface
                     )
                 }
             }

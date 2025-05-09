@@ -6,6 +6,7 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -17,110 +18,74 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 // Light theme colors - iOS aesthetic inspired
 private val LightColorScheme = lightColorScheme(
-    // Primary colors
-    primary = primaryLight,
-    onPrimary = onPrimaryLight,
-    primaryContainer = primaryContainerLight,
-    onPrimaryContainer = onPrimaryContainerLight,
-
-    // Secondary colors
-    secondary = secondaryLight,
-    onSecondary = onSecondaryLight,
-    secondaryContainer = secondaryContainerLight,
-    onSecondaryContainer = onSecondaryContainerLight,
-
-    // Tertiary colors
-    tertiary = tertiaryLight,
-    onTertiary = onTertiaryLight,
-    tertiaryContainer = tertiaryContainerLight,
-    onTertiaryContainer = onTertiaryContainerLight,
-
-    // Error colors
-    error = errorLight,
-    onError = onErrorLight,
-    errorContainer = errorContainerLight,
-    onErrorContainer = onErrorContainerLight,
-
-    // Background and surface
-    background = backgroundLight,
-    onBackground = onBackgroundLight,
-    surface = surfaceLight,
-    onSurface = onSurfaceLight,
-    surfaceVariant = surfaceVariantLight,
-    onSurfaceVariant = onSurfaceVariantLight,
-
-    // Other colors
-    outline = outlineLight,
-    outlineVariant = outlineVariantLight,
-    scrim = scrimLight,
-    inverseSurface = inverseSurfaceLight,
-    inverseOnSurface = inverseOnSurfaceLight,
-    inversePrimary = inversePrimaryLight,
-    surfaceDim = surfaceDimLight,
-    surfaceBright = surfaceBrightLight,
-    surfaceContainerLowest = surfaceContainerLowestLight,
-    surfaceContainerLow = surfaceContainerLowLight,
-    surfaceContainer = surfaceContainerLight,
-    surfaceContainerHigh = surfaceContainerHighLight,
-    surfaceContainerHighest = surfaceContainerHighestLight
+    primary = IOSColors.LightPrimary,
+    onPrimary = IOSColors.LightOnPrimary,
+    primaryContainer = IOSColors.LightPrimaryContainer,
+    onPrimaryContainer = IOSColors.LightOnPrimaryContainer,
+    secondary = IOSColors.LightSecondary,
+    onSecondary = IOSColors.LightOnSecondary,
+    secondaryContainer = IOSColors.LightSecondaryContainer,
+    onSecondaryContainer = IOSColors.LightOnSecondaryContainer,
+    tertiary = IOSColors.LightTertiary,
+    onTertiary = IOSColors.LightOnTertiary,
+    tertiaryContainer = IOSColors.LightTertiaryContainer,
+    onTertiaryContainer = IOSColors.LightOnTertiaryContainer,
+    error = IOSColors.LightError,
+    errorContainer = IOSColors.LightErrorContainer,
+    onError = IOSColors.LightOnError,
+    onErrorContainer = IOSColors.LightOnErrorContainer,
+    background = IOSColors.LightBackground,
+    onBackground = IOSColors.LightOnBackground,
+    surface = IOSColors.LightSurface,
+    onSurface = IOSColors.LightOnSurface,
+    surfaceVariant = IOSColors.LightSurfaceVariant,
+    onSurfaceVariant = IOSColors.LightOnSurfaceVariant,
+    outline = IOSColors.LightOutline,
+    outlineVariant = IOSColors.LightOutlineVariant,
+    inverseSurface = IOSColors.LightInverseSurface,
+    inverseOnSurface = IOSColors.LightInverseOnSurface,
+    inversePrimary = IOSColors.LightInversePrimary,
+    surfaceTint = IOSColors.LightSurfaceTint,
+    scrim = IOSColors.LightScrim
 )
 
 // Dark theme colors - iOS aesthetic inspired
 private val DarkColorScheme = darkColorScheme(
-    // Primary colors
-    primary = primaryDark,
-    onPrimary = onPrimaryDark,
-    primaryContainer = primaryContainerDark,
-    onPrimaryContainer = onPrimaryContainerDark,
-
-    // Secondary colors
-    secondary = secondaryDark,
-    onSecondary = onSecondaryDark,
-    secondaryContainer = secondaryContainerDark,
-    onSecondaryContainer = onSecondaryContainerDark,
-
-    // Tertiary colors
-    tertiary = tertiaryDark,
-    onTertiary = onTertiaryDark,
-    tertiaryContainer = tertiaryContainerDark,
-    onTertiaryContainer = onTertiaryContainerDark,
-
-    // Error colors
-    error = errorDark,
-    onError = onErrorDark,
-    errorContainer = errorContainerDark,
-    onErrorContainer = onErrorContainerDark,
-
-    // Background and surface
-    background = backgroundDark,
-    onBackground = onBackgroundDark,
-    surface = surfaceDark,
-    onSurface = onSurfaceDark,
-    surfaceVariant = surfaceVariantDark,
-    onSurfaceVariant = onSurfaceVariantDark,
-
-    // Other colors
-    outline = outlineDark,
-    outlineVariant = outlineVariantDark,
-    scrim = scrimDark,
-    inverseSurface = inverseSurfaceDark,
-    inverseOnSurface = inverseOnSurfaceDark,
-    inversePrimary = inversePrimaryDark,
-    surfaceDim = surfaceDimDark,
-    surfaceBright = surfaceBrightDark,
-    surfaceContainerLowest = surfaceContainerLowestDark,
-    surfaceContainerLow = surfaceContainerLowDark,
-    surfaceContainer = surfaceContainerDark,
-    surfaceContainerHigh = surfaceContainerHighDark,
-    surfaceContainerHighest = surfaceContainerHighestDark
+    primary = IOSColors.DarkPrimary,
+    onPrimary = IOSColors.DarkOnPrimary,
+    primaryContainer = IOSColors.DarkPrimaryContainer,
+    onPrimaryContainer = IOSColors.DarkOnPrimaryContainer,
+    secondary = IOSColors.DarkSecondary,
+    onSecondary = IOSColors.DarkOnSecondary,
+    secondaryContainer = IOSColors.DarkSecondaryContainer,
+    onSecondaryContainer = IOSColors.DarkOnSecondaryContainer,
+    tertiary = IOSColors.DarkTertiary,
+    onTertiary = IOSColors.DarkOnTertiary,
+    tertiaryContainer = IOSColors.DarkTertiaryContainer,
+    onTertiaryContainer = IOSColors.DarkOnTertiaryContainer,
+    error = IOSColors.DarkError,
+    errorContainer = IOSColors.DarkErrorContainer,
+    onError = IOSColors.DarkOnError,
+    onErrorContainer = IOSColors.DarkOnErrorContainer,
+    background = IOSColors.DarkBackground,
+    onBackground = IOSColors.DarkOnBackground,
+    surface = IOSColors.DarkSurface,
+    onSurface = IOSColors.DarkOnSurface,
+    surfaceVariant = IOSColors.DarkSurfaceVariant,
+    onSurfaceVariant = IOSColors.DarkOnSurfaceVariant,
+    outline = IOSColors.DarkOutline,
+    outlineVariant = IOSColors.DarkOutlineVariant,
+    inverseSurface = IOSColors.DarkInverseSurface,
+    inverseOnSurface = IOSColors.DarkInverseOnSurface,
+    inversePrimary = IOSColors.DarkInversePrimary,
+    surfaceTint = IOSColors.DarkSurfaceTint,
+    scrim = IOSColors.DarkScrim
 )
 
 // iOS-inspired typography for Material3
@@ -340,3 +305,26 @@ fun RadioGuyanaTheme(
 fun rememberThemeState(): ThemeState {
     return LocalThemeState.current
 }
+
+internal val LocalThemeIsDark = compositionLocalOf { mutableStateOf(true) }
+
+@Composable
+internal fun AppTheme(
+    content: @Composable () -> Unit
+) {
+    val systemIsDark = isSystemInDarkTheme()
+    val isDarkState = remember(systemIsDark) { mutableStateOf(systemIsDark) }
+    CompositionLocalProvider(
+        LocalThemeIsDark provides isDarkState
+    ) {
+        val isDark by isDarkState
+        SystemAppearance(!isDark)
+        MaterialTheme(
+            colorScheme = if (isDark) DarkColorScheme else LightColorScheme,
+            content = { Surface(content = content) }
+        )
+    }
+}
+
+@Composable
+internal expect fun SystemAppearance(isDark: Boolean)
