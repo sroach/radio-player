@@ -55,25 +55,32 @@ fun MainScreen(
     onNavigateToSettings: () -> Unit
 ) {
     val station = remember { Station() }
-    val selectedStation = remember(selectedStationIndex) { station.item(selectedStationIndex) }
 
     // Collect the isRefreshing state
     val isRefreshing by station.isRefreshing.collectAsState()
 
+    // Collect the stations flow to ensure UI updates when stations change
+    val stations by station.stationsFlow.collectAsState()
+
+    // Ensure selectedStation is updated when stations change
+    val selectedStation = remember(selectedStationIndex, stations) { 
+        stations.getOrNull(selectedStationIndex) ?: stations.firstOrNull() ?: station.item(selectedStationIndex)
+    }
+
     // Extract unique station types
-    val allStationTypes = remember {
-        station.array.flatMap { it.type }.map { it.trim().lowercase() }.distinct().sorted()
+    val allStationTypes = remember(stations) {
+        stations.flatMap { it.type }.map { it.trim().lowercase() }.distinct().sorted()
     }
 
     // State for selected station type filters
     var selectedStationTypes by remember { mutableStateOf<Set<String>>(emptySet()) }
 
     // Filter stations based on selected types
-    val filteredStations = remember(selectedStationTypes) {
+    val filteredStations = remember(selectedStationTypes, stations) {
         if (selectedStationTypes.isEmpty()) {
-            station.array
+            stations
         } else {
-            station.array.filter { stationItem ->
+            stations.filter { stationItem ->
                 stationItem.type.any { type -> 
                     selectedStationTypes.contains(type.trim().lowercase())
                 }
@@ -176,6 +183,7 @@ fun MainScreen(
                             isSelected = stationItem.index == selectedStationIndex,
                             isPlaying = isPlaying && stationItem.index == selectedStationIndex,
                             audioPlayer = audioPlayer,
+                            settingsState = settingsState,
                             onClick = {
                                 onStationSelected(stationItem.index)
                             },
@@ -193,7 +201,7 @@ fun MainScreen(
                                     } else {
                                         // Make sure we have a valid URL
                                         if (stationItem.url.isNotBlank()) {
-                                            audioPlayer.play(stationItem.url)
+                                            audioPlayer.play(stationItem)
                                             onPlayingStateChanged(true)
                                         } else {
                                             println("Error: Station URL is blank")
@@ -248,7 +256,7 @@ fun StationTypeChip(
 }
 
 /**
- * Bottom bar with station info and equalizer visualizer.
+ * Bottom bar with station info.
  *
  * @param selectedStation The currently selected station
  * @param isPlaying Whether audio is currently playing
@@ -266,65 +274,16 @@ fun MainBottomBar(
     onNavigateToSettings: () -> Unit = {},
     onNavigateToAbout: () -> Unit = {}
 ) {
-    // State to control equalizer visibility
-    var isEqualizerVisible by remember { mutableStateOf(false) }
-
     // Use Box as the root composable to allow proper positioning of all elements
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
-        // Equalizer button - positioned behind the bottom bar
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter) // Align to bottom center
-                .offset(y = if (isEqualizerVisible && isPlaying) (-235).dp else (-45).dp) // Position relative to the bottom bar
-                .size(width = 60.dp, height = 40.dp) // Wider for rectangle shape
-                .clip(RoundedCornerShape(12.dp)) // Rounded rectangle instead of circle
-                .background(MaterialTheme.colors.surface) // Match bottom bar color
-                .clickable { isEqualizerVisible = !isEqualizerVisible },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = if (isEqualizerVisible) "v" else "^", // Caret symbol for down/up
-                color = MaterialTheme.colors.onSurface,
-                style = MaterialTheme.typography.button.copy(
-                    fontSize = 18.sp
-                )
-            )
-        }
-
-        // Column to hold the bottom bar and equalizer
+        // Column to hold the bottom bar
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter) // Ensure column is aligned to bottom
         ) {
-            // Show equalizer when visible and playing
-            AnimatedVisibility(visible = isEqualizerVisible && isPlaying) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colors.surface)
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Audio Spectrum",
-                        style = MaterialTheme.typography.subtitle2,
-                        color = MaterialTheme.colors.onSurface,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-
-                    SelectedVisualizer(
-                        type = settingsState.visualizerType,
-                        isPlaying = isPlaying,
-                        audioPlayer = audioPlayer,
-                        modifier = Modifier.height(150.dp)
-                    )
-
-
-                }
-            }
 
             // Bottom app bar
             BottomAppBar(

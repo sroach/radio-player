@@ -14,6 +14,7 @@ class IosAudioPlayer : AudioPlayer {
     private var nowPlayingInfo = mutableMapOf<Any?, Any?>()
     private val remoteCommandCenter = MPRemoteCommandCenter.sharedCommandCenter()
     private var currentUrl: String? = null
+    private var currentStation: StationItem? = null
 
     init {
         println("Initializing IosAudioPlayer for background playback")
@@ -58,24 +59,55 @@ class IosAudioPlayer : AudioPlayer {
 
     /**
      * Update the Now Playing Info Center with track information.
+     * 
+     * @param stationName The name of the station
+     * @param stationGenre The genre of the station
      */
-    private fun updateNowPlayingInfo(url: String) {
+    private fun updateNowPlayingInfo(stationName: String, stationGenre: String) {
         try {
             // Create a new dictionary for now playing info
             nowPlayingInfo = mutableMapOf(
-                MPMediaItemPropertyTitle to "Radio Guyana",
-                MPMediaItemPropertyArtist to "Live Stream",
+                MPMediaItemPropertyTitle to stationName,
+                MPMediaItemPropertyArtist to stationGenre,
                 MPNowPlayingInfoPropertyPlaybackRate to 1.0,
                 MPNowPlayingInfoPropertyIsLiveStream to true
             )
 
+            // Add artwork to the now playing info
+            val image = UIImage.imageNamed("lockscreen")
+            if (image != null) {
+                try {
+                    // Create artwork using the constructor
+                    val artwork = MPMediaItemArtwork(image = image)
+                    nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
+                } catch (e: Exception) {
+                    println("Error creating artwork: ${e.message}")
+                }
+            }
+
             // Set the now playing info
             MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = nowPlayingInfo
 
-            println("Now playing info updated")
+            println("Now playing info updated with station: $stationName, genre: $stationGenre")
         } catch (e: Exception) {
             println("Error updating now playing info: ${e.message}")
         }
+    }
+
+    /**
+     * Update the Now Playing Info Center with default information.
+     * This is used when we only have a URL and no station information.
+     */
+    private fun updateNowPlayingInfo(url: String) {
+        updateNowPlayingInfo("Radio Guyana", "Live Stream")
+    }
+
+    override fun play(station: StationItem) {
+        // Store the current station
+        currentStation = station
+
+        // Call the URL-based play method
+        play(station.url)
     }
 
     override fun play(url: String) {
@@ -111,7 +143,11 @@ class IosAudioPlayer : AudioPlayer {
                 playing = true
 
                 // Update the Now Playing Info Center
-                updateNowPlayingInfo(url)
+                if (currentStation != null) {
+                    updateNowPlayingInfo(currentStation!!.label, currentStation!!.typeAsString())
+                } else {
+                    updateNowPlayingInfo(url)
+                }
 
                 println("Playback started, player state: ${player != null}, playing: $playing")
             } else {
@@ -133,6 +169,7 @@ class IosAudioPlayer : AudioPlayer {
             player = null
             playing = false
             currentUrl = null
+            currentStation = null
 
             // Clear the Now Playing Info Center
             MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = null

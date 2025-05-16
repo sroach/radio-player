@@ -106,7 +106,9 @@ fun App(themeState: ThemeState? = null) = AppTheme {
                                 IconButton(
                                     onClick = { currentThemeState.toggleTheme()},
                                     colors = IconButtonDefaults.iconButtonColors(
-                                        contentColor = Color(0xFFBB86FC).copy(alpha = 0.85f)
+                                        contentColor = MaterialTheme.colors.primary.copy(alpha = 0.85f)
+
+
                                     )
                                 ) {
 
@@ -210,6 +212,7 @@ fun StationItemCard(
     isSelected: Boolean = false,
     isPlaying: Boolean = false,
     audioPlayer: AudioPlayer? = null,
+    settingsState: SettingsState? = null,
     onClick: () -> Unit = {},
     onPlayPauseClick: () -> Unit = {}
 ) {
@@ -217,16 +220,21 @@ fun StationItemCard(
     val iosGreen = Color(0xFF34C759) // iOS system green
     val iosRed = MaterialTheme.colors.error // Using the iOS red from theme
 
-    // iOS-inspired card with subtle styling
+    // State to track if the card is expanded
+    var isExpanded by remember { mutableStateOf(false) }
+
+    // iOS-inspired card with subtle styling and elevation
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 6.dp) // iOS uses more horizontal padding
             .clickable {
+                // Toggle expanded state on click
+                isExpanded = !isExpanded
                 // Perform the original onClick action
                 onClick()
             },
-        elevation = 0.dp, // iOS uses flat designs without elevation
+        elevation = 4.dp, // Added elevation as requested
         shape = androidx.compose.foundation.shape.RoundedCornerShape(10.dp), // iOS typically uses 10dp corner radius
         backgroundColor = if (isSelected) 
             MaterialTheme.colors.primary.copy(alpha = 0.05f) // Very subtle selection highlight for iOS
@@ -237,33 +245,37 @@ fun StationItemCard(
             color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f) // Very subtle border typical of iOS
         )
     ) {
-        // Two-column layout
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp), // iOS standard padding
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            // First column: Station information (icon and text)
+        Column {
+            // Station information layout
             Row(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp), // iOS standard padding
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Display the station's icon with iOS-style sizing and theme-aware coloring
-                Image(
-                    painter = painterResource(Res.drawable.radio_icon),
-                    contentDescription = "Radio Icon",
+                // Create a random color from a pleasing palette (same as album cover)
+                val circleColor = when (stationItem.index % 5) {
+                    0 -> Color(0xFFFF7EB3) // Pink
+                    1 -> Color(0xFF7AFCFF) // Cyan
+                    2 -> Color(0xFFFEFF9C) // Yellow
+                    3 -> Color(0xFFFF9E7A) // Orange
+                    else -> Color(0xFF9CFFBA) // Green
+                }.copy(alpha = 0.9f)
+
+                // Display the item number inside a circle with the album cover color
+                Box(
+                    contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .size(44.dp) // iOS standard icon size
-                        .padding(2.dp), // Reduced padding for cleaner look
-                    colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(
-                        if (MaterialTheme.colors.isLight) 
-                            Color.Black.copy(alpha = 0.8f) // Slightly softer black for light mode
-                        else 
-                            Color.White.copy(alpha = 0.9f) // Slightly softer white for dark mode
+                        .clip(CircleShape)
+                        .background(circleColor)
+                ) {
+                    Text(
+                        text = "${stationItem.index + 1}",
+                        color = Color.Black.copy(alpha = 0.8f),
+                        style = MaterialTheme.typography.h6
                     )
-                )
+                }
 
                 Spacer(modifier = Modifier.width(12.dp)) // iOS uses tighter spacing
 
@@ -290,30 +302,138 @@ fun StationItemCard(
                 }
             }
 
-            // Second column: Play/Stop button (always visible)
-            Box(
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(44.dp) // iOS standard control size
-                    .background(if (isPlaying) iosRed else iosGreen)
-                    .clickable {
-                        // Call the onPlayPauseClick callback to handle play/stop functionality
-                        onPlayPauseClick()
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                if(isPlaying) {
-                    Icon(
-                        imageVector = Icons.Filled.StopCircle,
-                        contentDescription = "Stop Icon",
-                        tint = MaterialTheme.colors.onSurface
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Rounded.PlayCircle,
-                        contentDescription = "Play Icon",
-                        tint = MaterialTheme.colors.onSurface
-                    )
+            // Expanded player view
+            AnimatedVisibility(visible = isExpanded) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Music-related placeholder image with randomized color theme
+                    // Generate a deterministic random color based on the station index
+                    val random = kotlin.random.Random(stationItem.index)
+
+                    // Create a random color from a pleasing palette
+                    val randomColor = when (stationItem.index % 5) {
+                        0 -> Color(0xFFFF7EB3) // Pink
+                        1 -> Color(0xFF7AFCFF) // Cyan
+                        2 -> Color(0xFFFEFF9C) // Yellow
+                        3 -> Color(0xFFFF9E7A) // Orange
+                        else -> Color(0xFF9CFFBA) // Green
+                    }.copy(alpha = 0.9f)
+
+                    // Use a Box with gradient background to simulate albumcover.svg
+                    Box(
+                        modifier = Modifier
+                            .size(180.dp) // Increased size from 120.dp to 180.dp
+                            .padding(8.dp)
+                            .background(
+                                brush = androidx.compose.ui.graphics.Brush.linearGradient(
+                                    colors = listOf(
+                                        randomColor,
+                                        randomColor.copy(red = random.nextFloat(), green = random.nextFloat(), blue = random.nextFloat())
+                                    )
+                                ),
+                                shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        // Create a column to hold the station name text and add some circles
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            // Station name text with ellipsis for long names
+                            Text(
+                                text = stationItem.label,
+                                color = Color.White,
+                                style = MaterialTheme.typography.h5,
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                                maxLines = 2,
+                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            )
+
+                            // Add some small circles to simulate the abstract elements in albumcover.svg
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceEvenly,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                // Three small circles with different opacities
+                                Box(
+                                    modifier = Modifier
+                                        .size(12.dp)
+                                        .background(Color.White.copy(alpha = 0.3f), CircleShape)
+                                )
+                                Box(
+                                    modifier = Modifier
+                                        .size(16.dp)
+                                        .background(Color.White.copy(alpha = 0.2f), CircleShape)
+                                )
+                                Box(
+                                    modifier = Modifier
+                                        .size(10.dp)
+                                        .background(Color.White.copy(alpha = 0.4f), CircleShape)
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Play/Stop button in the expanded view
+                    Box(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .size(56.dp) // Slightly larger for better visibility
+                            .background(if (isPlaying) iosRed else iosGreen)
+                            .clickable {
+                                // Call the onPlayPauseClick callback to handle play/stop functionality
+                                onPlayPauseClick()
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if(isPlaying) {
+                            Icon(
+                                imageVector = Icons.Filled.StopCircle,
+                                contentDescription = "Stop Icon",
+                                tint = MaterialTheme.colors.onSurface,
+                                modifier = Modifier.size(32.dp)
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Rounded.PlayCircle,
+                                contentDescription = "Play Icon",
+                                tint = MaterialTheme.colors.onSurface,
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Show visualizer when playing
+                    if (isPlaying && audioPlayer != null && settingsState != null) {
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = "Audio Spectrum",
+                            style = MaterialTheme.typography.subtitle2,
+                            color = MaterialTheme.colors.onSurface,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+
+                        SelectedVisualizer(
+                            type = settingsState.visualizerType,
+                            isPlaying = isPlaying,
+                            audioPlayer = audioPlayer,
+                            modifier = Modifier.height(150.dp)
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
                 }
             }
         }

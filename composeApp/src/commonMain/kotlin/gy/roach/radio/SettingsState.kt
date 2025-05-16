@@ -19,7 +19,8 @@ enum class VisualizerType {
     CIRCLE,
     FIREWORKS,
     BOUNCING_BALLS,
-    SPECTRUM
+    SPECTRUM,
+    FREQUENCY
 }
 
 /**
@@ -29,7 +30,7 @@ class SettingsState {
     /**
      * The currently selected visualizer type.
      */
-    var visualizerType by mutableStateOf(VisualizerType.BOUNCING_BALLS)
+    var visualizerType by mutableStateOf(VisualizerType.FREQUENCY)
         private set
 
     /**
@@ -67,5 +68,6 @@ fun SelectedVisualizer(
         VisualizerType.FIREWORKS -> FireworksVisualizer(isPlaying = isPlaying, modifier = modifier)
         VisualizerType.BOUNCING_BALLS -> BalloonsVisualizer(isPlaying = isPlaying, modifier = modifier)
         VisualizerType.SPECTRUM -> SpectrumVisualizer(isPlaying = isPlaying, modifier = modifier)
+        VisualizerType.FREQUENCY -> FrequencyVisualizer(isPlaying = isPlaying, modifier = modifier)
     }
 }

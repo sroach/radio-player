@@ -357,6 +357,19 @@ class Station {
               "Urban"
             ],
             "imageResource": "radio_icon"
+          }, 
+          {
+          "index": 23,
+          "url": "https://stream.zeno.fm/dbstwo3dvhhtv",
+          "label": "92.7 Big FM online",
+          "type": ["Bollywood", "Pop"],
+          "imageResource": "radio_icon"
+          }, {
+          "index": 24,
+          "url": "https://stream-174.zeno.fm/q97eczydqrhvv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJxOTdlY3p5ZHFyaHZ2IiwiaG9zdCI6InN0cmVhbS0xNzQuemVuby5mbSIsInJ0dGwiOjUsImp0aSI6InRhOHAxeTRDVDdHenYtN2NoeFQxRmciLCJpYXQiOjE3NDIwNDA3NDEsImV4cCI6MTc0MjA0MDgwMX0.MkjhfjpDcWKnjIHhgkq3SGxg9gH8U901CrsfPZ42PGM",
+          "label": "Red FM 93.5",
+          "type": ["Bollywood", "Pop"],
+          "imageResource": "radio_icon"
           }
         ]
         """
