@@ -17,9 +17,11 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.StopCircle
+import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -252,7 +254,8 @@ fun MainScreen(
 
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth().fillMaxHeight(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(0.dp)
+
                 ) {
 
                     items(filteredStations) { stationItem ->
@@ -264,34 +267,6 @@ fun MainScreen(
                             settingsState = settingsState,
                             onClick = {
                                 onStationSelected(stationItem.index)
-                            },
-                            onPlayPauseClick = {
-                                // First select the station if it's not already selected
-                                val isSelectedStation = stationItem.index == selectedStationIndex
-                                if (!isSelectedStation) {
-                                    onStationSelected(stationItem.index)
-                                }
-
-                                try {
-                                    // If the station is already playing and selected, stop playback
-                                    if (isPlaying && isSelectedStation) {
-                                        audioPlayer.stop()
-                                        onPlayingStateChanged(false)
-                                    } else {
-                                        // Otherwise, play the station
-                                        // Make sure we have a valid URL
-                                        if (stationItem.url.isNotBlank()) {
-                                            audioPlayer.play(stationItem)
-                                            onPlayingStateChanged(true)
-                                        } else {
-                                            println("Error: Station URL is blank")
-                                        }
-                                    }
-                                } catch (e: Exception) {
-                                    println("Error toggling playback: ${e.message}")
-                                    // Reset state to ensure UI is consistent
-                                    onPlayingStateChanged(audioPlayer.isPlaying())
-                                }
                             }
                         )
                     }
@@ -344,6 +319,7 @@ fun StationTypeChip(
  * @param onNavigateToSettings Callback to navigate to settings screen
  * @param onNavigateToAbout Callback to navigate to about screen
  * @param onStopPlayback Callback to stop the currently playing station
+ * @param onPlayStation Callback to play the selected station
  */
 @Composable
 fun MainBottomBar(
@@ -353,7 +329,8 @@ fun MainBottomBar(
     settingsState: SettingsState,
     onNavigateToSettings: () -> Unit = {},
     onNavigateToAbout: () -> Unit = {},
-    onStopPlayback: () -> Unit = {}
+    onStopPlayback: () -> Unit = {},
+    onPlayStation: () -> Unit = {}
 ) {
     // State to track if the audio spectrum is expanded
     var isSpectrumExpanded by remember { mutableStateOf(false) }
@@ -401,10 +378,10 @@ fun MainBottomBar(
                 contentAlignment = Alignment.Center
             ) {
                 // Subtle line at the top of the bottom bar
-                Divider(
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
-                    thickness = 0.5.dp,
-                    modifier = Modifier.fillMaxWidth()
+                HorizontalDivider(
+                    Modifier.fillMaxWidth(),
+                    0.5.dp,
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
                 )
 
                 // Toggle audio spectrum button with circular background
@@ -468,8 +445,9 @@ fun MainBottomBar(
 
                     // The toggle button has been moved above the line
 
-                    // Stop button - only visible when a station is playing
+                    // Play/Stop button
                     if (isPlaying) {
+                        // Stop button - visible when a station is playing
                         IconButton(
                             onClick = onStopPlayback,
                             modifier = Modifier.padding(end = 4.dp)
@@ -478,6 +456,18 @@ fun MainBottomBar(
                                 imageVector = Icons.Filled.StopCircle,
                                 contentDescription = "Stop",
                                 tint = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    } else {
+                        // Play button - visible when no station is playing
+                        IconButton(
+                            onClick = onPlayStation,
+                            modifier = Modifier.padding(end = 4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.PlayCircle,
+                                contentDescription = "Play",
+                                tint = Color(0xFF34C759) // iOS system green
                             )
                         }
                     }

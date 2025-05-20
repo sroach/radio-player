@@ -139,6 +139,15 @@ fun App(themeState: ThemeState? = null) = AppTheme {
                                 // Stop the currently playing station
                                 audioPlayer.stop()
                                 isPlaying = false
+                            },
+                            onPlayStation = {
+                                // Play the selected station
+                                if (selectedStation.url.isNotBlank()) {
+                                    audioPlayer.play(selectedStation)
+                                    isPlaying = true
+                                } else {
+                                    println("Error: Station URL is blank")
+                                }
                             }
                         )
                     }
@@ -207,18 +216,13 @@ fun StationItemCard(
     isPlaying: Boolean = false,
     audioPlayer: AudioPlayer? = null,
     settingsState: SettingsState? = null,
-    onClick: () -> Unit = {},
-    onPlayPauseClick: () -> Unit = {}
+    onClick: () -> Unit = {}
 ) {
-    // Define iOS system green color for play button
-    val iosGreen = Color(0xFF34C759) // iOS system green
-    val iosRed = MaterialTheme.colorScheme.error // Using the iOS red from theme
-
     // iOS-native card with subtle styling and lighter elevation
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 6.dp) // iOS uses more horizontal padding
+            .padding(horizontal = 16.dp, vertical = 2.dp) // Reduced vertical padding to decrease space between cards
             .clickable {
                 // Perform the onClick action
                 onClick()
@@ -250,7 +254,7 @@ fun StationItemCard(
             // Left section with accent bar, station number and info
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(1f) // Give the station info row a weight to control its space
+                modifier = Modifier.fillMaxWidth() // Use full width now that play button is removed
             ) {
                 // Left accent bar for selection
                 if (isSelected) {
@@ -293,60 +297,24 @@ fun StationItemCard(
                 Column(
                     modifier = Modifier.weight(1f) // Give the text column a weight to control its space
                 ) {
-                    // Title with SF Pro text styling
+                    // Title with SF Pro text styling - no more maxLines limit
                     Text(
                         text = stationItem.label,
                         style = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.Medium // SF Pro typically uses Medium weight for headings
                         ), 
-                        color = Color(0xFF000000), // iOS uses pure black for primary text
-                        maxLines = 1, // Limit to one line
-                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis // Add ellipsis for overflow
+                        color = Color(0xFF000000) // iOS uses pure black for primary text
                     )
 
                     Spacer(modifier = Modifier.height(2.dp)) // iOS uses tighter spacing
 
-                    // Subtitle with SF Pro text styling
+                    // Subtitle with SF Pro text styling - no more maxLines limit
                     Text(
                         text = stationItem.typeAsString(),
                         style = MaterialTheme.typography.bodyMedium.copy(
                             fontWeight = FontWeight.Normal // SF Pro uses Normal weight for body text
                         ),
-                        color = Color(0xFF8E8E93), // iOS systemGray color for secondary text
-                        maxLines = 1, // Limit to one line
-                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis // Add ellipsis for overflow
-                    )
-                }
-            }
-
-            // Add spacing between station info and play/stop button
-            Spacer(modifier = Modifier.width(8.dp))
-
-            // Play/Stop button on the right side of the card
-            Box(
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(48.dp)
-                    .background(if (isPlaying) iosRed else iosGreen)
-                    .clickable {
-                        // Call the onPlayPauseClick callback to handle play/stop functionality
-                        onPlayPauseClick()
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                if(isPlaying) {
-                    Icon(
-                        imageVector = Icons.Filled.StopCircle,
-                        contentDescription = "Stop Icon",
-                        tint = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.size(28.dp)
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Rounded.PlayCircle,
-                        contentDescription = "Play Icon",
-                        tint = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.size(28.dp)
+                        color = Color(0xFF8E8E93) // iOS systemGray color for secondary text
                     )
                 }
             }
