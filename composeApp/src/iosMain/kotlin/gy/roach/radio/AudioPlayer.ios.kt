@@ -142,6 +142,9 @@ class IosAudioPlayer : AudioPlayer {
                 player?.play()
                 playing = true
 
+                // Start the audio analyzer for visualization
+                AudioAnalyzerManager.start()
+
                 // Update the Now Playing Info Center
                 if (currentStation != null) {
                     updateNowPlayingInfo(currentStation!!.label, currentStation!!.typeAsString())
@@ -170,6 +173,9 @@ class IosAudioPlayer : AudioPlayer {
             playing = false
             currentUrl = null
             currentStation = null
+
+            // Stop the audio analyzer
+            AudioAnalyzerManager.stop()
 
             // Clear the Now Playing Info Center
             MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = null

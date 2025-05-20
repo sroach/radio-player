@@ -1,35 +1,39 @@
 package gy.roach.radio
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.StopCircle
-import androidx.compose.material.icons.rounded.PlayArrow
-import androidx.compose.material.icons.rounded.PlayCircle
-
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import gy.roach.radio.ui.IosCard
+import gy.roach.radio.visualizers.*
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
  * Main screen of the app showing the radio stations list.
@@ -43,6 +47,7 @@ import androidx.compose.ui.unit.sp
  * @param onNavigateToAbout Callback to navigate to the about screen
  * @param onNavigateToSettings Callback to navigate to the settings screen
  */
+@Preview
 @Composable
 fun MainScreen(
     audioPlayer: AudioPlayer,
@@ -89,15 +94,87 @@ fun MainScreen(
     }
 
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        remember { Greeting().greet() }
 
         // Main content
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             // Display a side-by-side view with stations and image
             Column(
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // Album graphic that changes based on selected station
+                if (stations.isNotEmpty()) {
+                    // Create a random color from a pleasing palette
+                    val randomColor = when (selectedStation.index % 5) {
+                        0 -> Color(0xFFFF7EB3) // Pink
+                        1 -> Color(0xFF7AFCFF) // Cyan
+                        2 -> Color(0xFFFEFF9C) // Yellow
+                        3 -> Color(0xFFFF9E7A) // Orange
+                        else -> Color(0xFF9CFFBA) // Green
+                    }.copy(alpha = 0.9f)
+
+                    val random = kotlin.random.Random(selectedStation.index)
+
+                    // Use a Box with gradient background to simulate albumcover.svg
+                    Box(
+                        modifier = Modifier
+                            .size(135.dp) // Reduced by 75% from 180.dp
+                            .padding(8.dp)
+                            .background(
+                                brush = androidx.compose.ui.graphics.Brush.linearGradient(
+                                    colors = listOf(
+                                        randomColor,
+                                        randomColor.copy(red = random.nextFloat(), green = random.nextFloat(), blue = random.nextFloat())
+                                    )
+                                ),
+                                shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        // Create a column to hold the station name text and add some circles
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            // Station name text with ellipsis for long names
+                            Text(
+                                text = selectedStation.label,
+                                color = Color.White,
+                                style = MaterialTheme.typography.headlineSmall,
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                                maxLines = 2,
+                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            )
+
+                            // Add some small circles to simulate the abstract elements in albumcover.svg
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceEvenly,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                // Three small circles with different opacities
+                                Box(
+                                    modifier = Modifier
+                                        .size(12.dp)
+                                        .background(Color.White.copy(alpha = 0.3f), CircleShape)
+                                )
+                                Box(
+                                    modifier = Modifier
+                                        .size(16.dp)
+                                        .background(Color.White.copy(alpha = 0.2f), CircleShape)
+                                )
+                                Box(
+                                    modifier = Modifier
+                                        .size(10.dp)
+                                        .background(Color.White.copy(alpha = 0.4f), CircleShape)
+                                )
+                            }
+                        }
+                    }
+                }
+
                 // Header row with title and refresh button
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -107,8 +184,8 @@ fun MainScreen(
                     // Title
                     Text(
                         text = "Select a Radio Station",
-                        style = MaterialTheme.typography.h6,
-                        color = MaterialTheme.colors.onSurface
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
 
                     // Refresh button
@@ -127,7 +204,7 @@ fun MainScreen(
                             Icon(
                                 imageVector = Icons.Default.Refresh,
                                 contentDescription = "Refresh Stations",
-                                tint = MaterialTheme.colors.primary
+                                tint = MaterialTheme.colorScheme.primary
                             )
                         }
                     }
@@ -137,8 +214,8 @@ fun MainScreen(
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = "Filter by Type:",
-                        style = MaterialTheme.typography.subtitle2,
-                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
 
@@ -177,6 +254,7 @@ fun MainScreen(
                     modifier = Modifier.fillMaxWidth().fillMaxHeight(),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+
                     items(filteredStations) { stationItem ->
                         StationItemCard(
                             stationItem = stationItem,
@@ -189,16 +267,18 @@ fun MainScreen(
                             },
                             onPlayPauseClick = {
                                 // First select the station if it's not already selected
-                                if (stationItem.index != selectedStationIndex) {
+                                val isSelectedStation = stationItem.index == selectedStationIndex
+                                if (!isSelectedStation) {
                                     onStationSelected(stationItem.index)
                                 }
 
-                                // Then toggle play/pause
                                 try {
-                                    if (isPlaying && stationItem.index == selectedStationIndex) {
+                                    // If the station is already playing and selected, stop playback
+                                    if (isPlaying && isSelectedStation) {
                                         audioPlayer.stop()
                                         onPlayingStateChanged(false)
                                     } else {
+                                        // Otherwise, play the station
                                         // Make sure we have a valid URL
                                         if (stationItem.url.isNotBlank()) {
                                             audioPlayer.play(stationItem)
@@ -238,25 +318,24 @@ fun StationTypeChip(
         modifier = Modifier
             .clip(RoundedCornerShape(16.dp))
             .clickable(onClick = onClick),
-        color = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.surface,
-        contentColor = if (selected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface,
-        elevation = if (selected) 4.dp else 1.dp,
+        color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
+        contentColor = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
         shape = RoundedCornerShape(16.dp),
         border = androidx.compose.foundation.BorderStroke(
             width = 1.dp,
-            color = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onSurface.copy(alpha = 0.12f)
+            color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
         )
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.body2,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
         )
     }
 }
 
 /**
- * Bottom bar with station info.
+ * Bottom bar with station info and expandable audio spectrum visualization.
  *
  * @param selectedStation The currently selected station
  * @param isPlaying Whether audio is currently playing
@@ -264,6 +343,7 @@ fun StationTypeChip(
  * @param settingsState The state object that holds settings preferences
  * @param onNavigateToSettings Callback to navigate to settings screen
  * @param onNavigateToAbout Callback to navigate to about screen
+ * @param onStopPlayback Callback to stop the currently playing station
  */
 @Composable
 fun MainBottomBar(
@@ -272,23 +352,99 @@ fun MainBottomBar(
     audioPlayer: AudioPlayer,
     settingsState: SettingsState,
     onNavigateToSettings: () -> Unit = {},
-    onNavigateToAbout: () -> Unit = {}
+    onNavigateToAbout: () -> Unit = {},
+    onStopPlayback: () -> Unit = {}
 ) {
+    // State to track if the audio spectrum is expanded
+    var isSpectrumExpanded by remember { mutableStateOf(false) }
+
     // Use Box as the root composable to allow proper positioning of all elements
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
-        // Column to hold the bottom bar
+        // Column to hold the bottom bar and expandable audio spectrum
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter) // Ensure column is aligned to bottom
         ) {
+            // Expandable audio spectrum visualization
+            AnimatedVisibility(visible = isSpectrumExpanded && isPlaying) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Audio Spectrum",
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+
+                    SelectedVisualizer(
+                        type = settingsState.visualizerType,
+                        isPlaying = isPlaying,
+                        audioPlayer = audioPlayer,
+                        modifier = Modifier.height(150.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+
+            // Box to position the toggle button above the line
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                // Subtle line at the top of the bottom bar
+                Divider(
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                    thickness = 0.5.dp,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                // Toggle audio spectrum button with circular background
+                if (isPlaying) {
+                    Surface(
+                        modifier = Modifier
+                            .offset(y = (-18).dp) // Position it half above the line
+                            .size(36.dp),
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
+                        tonalElevation = 1.dp, // Very subtle elevation for iOS look
+                        border = BorderStroke(
+                            width = 0.5.dp,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+                        )
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clickable { isSpectrumExpanded = !isSpectrumExpanded }
+                                .padding(8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            // Horizontal line/pill shape instead of chevron
+                            Box(
+                                modifier = Modifier
+                                    .width(16.dp)
+                                    .height(4.dp)
+                                    .clip(RoundedCornerShape(2.dp))
+                                    .background(MaterialTheme.colorScheme.primary)
+                            )
+                        }
+                    }
+                }
+            }
 
             // Bottom app bar
             BottomAppBar(
-                backgroundColor = MaterialTheme.colors.surface,
-                elevation = 8.dp,
+                containerColor = MaterialTheme.colorScheme.background,
+                tonalElevation = 8.dp,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Row(
@@ -300,14 +456,30 @@ fun MainBottomBar(
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = selectedStation.label,
-                            style = MaterialTheme.typography.subtitle1,
-                            color = MaterialTheme.colors.onSurface
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
                             text = selectedStation.typeAsString(),
-                            style = MaterialTheme.typography.caption,
-                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                         )
+                    }
+
+                    // The toggle button has been moved above the line
+
+                    // Stop button - only visible when a station is playing
+                    if (isPlaying) {
+                        IconButton(
+                            onClick = onStopPlayback,
+                            modifier = Modifier.padding(end = 4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.StopCircle,
+                                contentDescription = "Stop",
+                                tint = MaterialTheme.colorScheme.error
+                            )
+                        }
                     }
 
                     // Settings button
@@ -315,7 +487,7 @@ fun MainBottomBar(
                         Icon(
                             imageVector = Icons.Default.Settings,
                             contentDescription = "Settings",
-                            tint = MaterialTheme.colors.onSurface
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
 
@@ -324,7 +496,7 @@ fun MainBottomBar(
                         Icon(
                             imageVector = Icons.Default.Info,
                             contentDescription = "About",
-                            tint = MaterialTheme.colors.onSurface
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }

@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,7 +46,7 @@ actual fun SplashScreen(onSplashFinished: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.primary),
+            .background(MaterialTheme.colorScheme.onPrimary),
         contentAlignment = Alignment.Center
     ) {
         // App logo
@@ -61,7 +61,7 @@ actual fun SplashScreen(onSplashFinished: () -> Unit) {
         // App name text at the bottom
         Text(
             text = "Radio Guyana Player",
-            color = MaterialTheme.colors.onPrimary,
+            color = MaterialTheme.colorScheme.onPrimary,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier

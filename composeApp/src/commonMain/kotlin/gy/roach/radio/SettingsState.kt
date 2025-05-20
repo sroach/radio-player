@@ -15,6 +15,7 @@ enum class VisualizerType {
     LAVA_LAMP,
     WAVE,
     EQUALIZER,
+    SVG_EQUALIZER,
     BAR,
     CIRCLE,
     FIREWORKS,
@@ -30,7 +31,7 @@ class SettingsState {
     /**
      * The currently selected visualizer type.
      */
-    var visualizerType by mutableStateOf(VisualizerType.FREQUENCY)
+    var visualizerType by mutableStateOf(VisualizerType.SVG_EQUALIZER)
         private set
 
     /**
@@ -63,6 +64,7 @@ fun SelectedVisualizer(
         VisualizerType.LAVA_LAMP -> LavaLampVisualizer(isPlaying = isPlaying, modifier = modifier)
         VisualizerType.WAVE -> WaveVisualizer(isPlaying = isPlaying, modifier = modifier)
         VisualizerType.EQUALIZER -> EqualizerVisualizer(audioPlayer = audioPlayer, modifier = modifier)
+        VisualizerType.SVG_EQUALIZER -> SVGEqualizerVisualizer(audioPlayer = audioPlayer, modifier = modifier)
         VisualizerType.BAR -> BarVisualizer(isPlaying = isPlaying, modifier = modifier)
         VisualizerType.CIRCLE -> CircleVisualizer(isPlaying = isPlaying, modifier = modifier)
         VisualizerType.FIREWORKS -> FireworksVisualizer(isPlaying = isPlaying, modifier = modifier)

@@ -45,8 +45,8 @@ kotlin {
             embedBitcode = org.jetbrains.kotlin.gradle.plugin.mpp.BitcodeEmbeddingMode.DISABLE
             freeCompilerArgs += listOf(
                 "-Xbinary=bundleId=gy.roach.radio",
-                "-Xbinary=bundleVersion=1.0",
-                "-Xbinary=bundleShortVersionString=1.0",
+                "-Xbinary=bundleVersion=1.2",
+                "-Xbinary=bundleShortVersionString=1.2",
                 "-Xbinary=infoPlist=${project.file("src/iosMain/Info.plist").absolutePath}",
                 "-Xbinary=infoPlistKey=STATIONS_API_KEY=$apiKey"
             )
@@ -130,7 +130,6 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
-            implementation(compose.material)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
@@ -174,8 +173,8 @@ android {
         applicationId = "gy.roach.radio"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.2"
 
         // Read API key from local.properties
         val isWindows = System.getProperty("os.name").lowercase().contains("windows")
@@ -233,7 +232,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "gy.roach.radio"
-            packageVersion = "1.0.0"
+            packageVersion = "1.2.0"
         }
     }
 }

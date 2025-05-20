@@ -265,3 +265,113 @@ fun ColorfulEqualizerVisualizer(
         }
     }
 }
+
+/**
+ * An equalizer visualizer that matches the design in equalizer.svg.
+ * It displays bars with different colored sections based on their height.
+ *
+ * @param audioPlayer The audio player to get frequency data from
+ * @param modifier Modifier for the component
+ * @param barCount The number of bars to display (default is 15)
+ */
+@Composable
+fun SVGEqualizerVisualizer(
+    audioPlayer: AudioPlayer,
+    modifier: Modifier = Modifier,
+    barCount: Int = 15
+) {
+    // Define the colors from equalizer.svg
+    val redColor = Color(0xFFC70039)    // Top section (highest)
+    val yellowColor = Color(0xFFF4C430) // Upper middle section
+    val oliveColor = Color(0xFF949f31)  // Lower middle section
+    val greenColor = Color(0xFF50C878)  // Bottom section (lowest)
+
+    // Observe frequency data from the audio player
+    val frequencyData by audioPlayer.observeFrequencyData()
+
+    // Create animated values for each bar
+    val animatedValues = List(barCount) { index ->
+        val targetValue = if (index < frequencyData.size) frequencyData[index] else 0f
+        val animatedValue by animateFloatAsState(
+            targetValue = targetValue,
+            animationSpec = tween(durationMillis = 100),
+            label = "bar_$index"
+        )
+        animatedValue
+    }
+
+    Canvas(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(150.dp)
+    ) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+
+        // Calculate bar width and spacing
+        val barWidth = canvasWidth / (barCount * 2)
+        val spacing = barWidth
+
+        // Define section heights (as percentages of total height)
+        val redSectionHeight = canvasHeight * 0.25f
+        val yellowSectionHeight = canvasHeight * 0.25f
+        val oliveSectionHeight = canvasHeight * 0.25f
+        val greenSectionHeight = canvasHeight * 0.25f
+
+        // Draw each bar
+        for (i in 0 until barCount) {
+            val value = animatedValues[i]
+            val barHeight = canvasHeight * value
+
+            // Calculate x position for the bar
+            val x = i * (barWidth + spacing) + spacing
+
+            // Draw the bar with different colored sections based on height
+            if (barHeight > 0) {
+                // Calculate section heights for this bar
+                val greenHeight = minOf(barHeight, greenSectionHeight)
+
+                // Draw green section (always visible if bar has any height)
+                drawRoundRect(
+                    color = greenColor,
+                    topLeft = Offset(x, canvasHeight - greenHeight),
+                    size = Size(barWidth, greenHeight),
+                    cornerRadius = CornerRadius(2f, 2f)
+                )
+
+                // Draw olive section if bar is tall enough
+                if (barHeight > greenSectionHeight) {
+                    val oliveHeight = minOf(barHeight - greenSectionHeight, oliveSectionHeight)
+                    drawRoundRect(
+                        color = oliveColor,
+                        topLeft = Offset(x, canvasHeight - greenHeight - oliveHeight),
+                        size = Size(barWidth, oliveHeight),
+                        cornerRadius = CornerRadius(2f, 2f)
+                    )
+
+                    // Draw yellow section if bar is tall enough
+                    if (barHeight > greenSectionHeight + oliveSectionHeight) {
+                        val yellowHeight = minOf(barHeight - greenSectionHeight - oliveSectionHeight, yellowSectionHeight)
+                        drawRoundRect(
+                            color = yellowColor,
+                            topLeft = Offset(x, canvasHeight - greenHeight - oliveHeight - yellowHeight),
+                            size = Size(barWidth, yellowHeight),
+                            cornerRadius = CornerRadius(2f, 2f)
+                        )
+
+                        // Draw red section if bar is tall enough
+                        if (barHeight > greenSectionHeight + oliveSectionHeight + yellowSectionHeight) {
+                            val redHeight = barHeight - greenSectionHeight - oliveSectionHeight - yellowSectionHeight
+                            drawRoundRect(
+                                color = redColor,
+                                topLeft = Offset(x, canvasHeight - barHeight),
+                                size = Size(barWidth, redHeight),
+                                cornerRadius = CornerRadius(2f, 2f)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

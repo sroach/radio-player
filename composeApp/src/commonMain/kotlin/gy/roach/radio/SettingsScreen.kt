@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.*
@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
  * Settings screen that allows users to configure app preferences.
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
  * @param settingsState The state object that holds settings preferences
  * @param onNavigateToMain Callback to navigate back to the main screen
  */
+@Preview
 @Composable
 fun SettingsScreen(
     settingsState: SettingsState,
@@ -39,8 +41,8 @@ fun SettingsScreen(
             item {
                 Text(
                     text = "Visualizer Settings",
-                    style = MaterialTheme.typography.h6,
-                    color = MaterialTheme.colors.onSurface,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
             }
@@ -97,7 +99,7 @@ private fun VisualizerSelectionItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        elevation = 2.dp
+        elevation = CardDefaults.cardElevation(2.dp)
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -109,13 +111,13 @@ private fun VisualizerSelectionItem(
                     .size(24.dp)
                     .clip(CircleShape)
                     .background(
-                        if (isSelected) MaterialTheme.colors.primary
-                        else MaterialTheme.colors.surface
+                        if (isSelected) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.surface
                     )
                     .border(
                         width = 2.dp,
-                        color = if (isSelected) MaterialTheme.colors.primary
-                               else MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                        color = if (isSelected) MaterialTheme.colorScheme.primary
+                               else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                         shape = CircleShape
                     ),
                 contentAlignment = Alignment.Center
@@ -135,8 +137,8 @@ private fun VisualizerSelectionItem(
             // Visualizer name
             Text(
                 text = name,
-                style = MaterialTheme.typography.body1,
-                color = MaterialTheme.colors.onSurface
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }
@@ -145,22 +147,22 @@ private fun VisualizerSelectionItem(
 /**
  * Top bar for the settings screen.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsTopBar(
     onNavigateToMain: () -> Unit
 ) {
     TopAppBar(
-        title = { Text("Settings",color = MaterialTheme.colors.onSurface,) },
+        title = { Text("Settings",color = MaterialTheme.colorScheme.onSurface,) },
         navigationIcon = {
             IconButton(onClick = onNavigateToMain) {
                 Icon(
                     imageVector = Icons.Default.Home,
                     contentDescription = "Home",
-                    tint = MaterialTheme.colors.onSurface
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
             }
         },
-        backgroundColor = MaterialTheme.colors.surface,
-        elevation = 8.dp
+        colors = TopAppBarDefaults.topAppBarColors(),
     )
 }

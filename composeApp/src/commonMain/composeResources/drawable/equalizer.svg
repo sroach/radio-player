@@ -1,0 +1,407 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" viewBox="0 0 366 400">
+  <defs>
+    <path id="a" fill="#C70039" d="M10 28h16v2H10z"/>
+      <path id="f" fill="#F4C430" d="M10 136h16v2H10z"/>
+      <path id="g" fill="#F4C430" d="M10 112h16v2H10z"/>
+  </defs>
+    <defs>
+    <rect id="e" width="16" height="10" x="0" y="0" fill="#50C878" rx="2" ry="2"/>
+        <rect id="d" width="16" height="10" x="0" y="0" fill="#949f31" rx="2" ry="2"/>
+        <rect id="c" width="16" height="10" x="0" y="0" fill="#F4C430" rx="2" ry="2"/>
+        <rect id="b" width="16" height="10" x="0" y="0" fill="#C70039" rx="2" ry="2"/>
+  </defs>
+    <g class="shadowed">
+    <use xlink:href="#a"/>
+        <use xlink:href="#b" x="10" y="40"/>
+        <use xlink:href="#b" x="10" y="52"/>
+        <use xlink:href="#b" x="10" y="64"/>
+        <use xlink:href="#b" x="10" y="76"/>
+        <use xlink:href="#b" x="10" y="88"/>
+        <use xlink:href="#c" x="10" y="100"/>
+        <use xlink:href="#c" x="10" y="112"/>
+        <use xlink:href="#c" x="10" y="124"/>
+        <use xlink:href="#c" x="10" y="136"/>
+        <use xlink:href="#c" x="10" y="148"/>
+        <use xlink:href="#c" x="10" y="160"/>
+        <use xlink:href="#d" x="10" y="172"/>
+        <use xlink:href="#d" x="10" y="184"/>
+        <use xlink:href="#d" x="10" y="196"/>
+        <use xlink:href="#d" x="10" y="208"/>
+        <use xlink:href="#d" x="10" y="220"/>
+        <use xlink:href="#d" x="10" y="232"/>
+        <use xlink:href="#e" x="10" y="244"/>
+        <use xlink:href="#e" x="10" y="256"/>
+        <use xlink:href="#e" x="10" y="268"/>
+        <use xlink:href="#e" x="10" y="280"/>
+        <use xlink:href="#e" x="10" y="292"/>
+        <use xlink:href="#e" x="10" y="304"/>
+        <use xlink:href="#e" x="10" y="316"/>
+        <use xlink:href="#e" x="10" y="328"/>
+        <use xlink:href="#e" x="10" y="340"/>
+        <use xlink:href="#e" x="10" y="352"/>
+        <use xlink:href="#e" x="10" y="364"/>
+        <use xlink:href="#e" x="10" y="376"/>
+        <use xlink:href="#e" x="10" y="388"/>
+  </g>
+    <g class="shadowed" transform="translate(22)">
+    <path fill="#C70039" d="M10 112h16v2H10z"/>
+        <use xlink:href="#c" x="10" y="136"/>
+        <use xlink:href="#c" x="10" y="148"/>
+        <use xlink:href="#c" x="10" y="160"/>
+        <use xlink:href="#d" x="10" y="172"/>
+        <use xlink:href="#d" x="10" y="184"/>
+        <use xlink:href="#d" x="10" y="196"/>
+        <use xlink:href="#d" x="10" y="208"/>
+        <use xlink:href="#d" x="10" y="220"/>
+        <use xlink:href="#d" x="10" y="232"/>
+        <use xlink:href="#e" x="10" y="244"/>
+        <use xlink:href="#e" x="10" y="256"/>
+        <use xlink:href="#e" x="10" y="268"/>
+        <use xlink:href="#e" x="10" y="280"/>
+        <use xlink:href="#e" x="10" y="292"/>
+        <use xlink:href="#e" x="10" y="304"/>
+        <use xlink:href="#e" x="10" y="316"/>
+        <use xlink:href="#e" x="10" y="328"/>
+        <use xlink:href="#e" x="10" y="340"/>
+        <use xlink:href="#e" x="10" y="352"/>
+        <use xlink:href="#e" x="10" y="364"/>
+        <use xlink:href="#e" x="10" y="376"/>
+        <use xlink:href="#e" x="10" y="388"/>
+  </g>
+    <g class="shadowed" transform="translate(44)">
+    <path fill="#C70039" d="M10 100h16v2H10z"/>
+        <use xlink:href="#c" x="10" y="112"/>
+        <use xlink:href="#c" x="10" y="124"/>
+        <use xlink:href="#c" x="10" y="136"/>
+        <use xlink:href="#c" x="10" y="148"/>
+        <use xlink:href="#c" x="10" y="160"/>
+        <use xlink:href="#d" x="10" y="172"/>
+        <use xlink:href="#d" x="10" y="184"/>
+        <use xlink:href="#d" x="10" y="196"/>
+        <use xlink:href="#d" x="10" y="208"/>
+        <use xlink:href="#d" x="10" y="220"/>
+        <use xlink:href="#d" x="10" y="232"/>
+        <use xlink:href="#e" x="10" y="244"/>
+        <use xlink:href="#e" x="10" y="256"/>
+        <use xlink:href="#e" x="10" y="268"/>
+        <use xlink:href="#e" x="10" y="280"/>
+        <use xlink:href="#e" x="10" y="292"/>
+        <use xlink:href="#e" x="10" y="304"/>
+        <use xlink:href="#e" x="10" y="316"/>
+        <use xlink:href="#e" x="10" y="328"/>
+        <use xlink:href="#e" x="10" y="340"/>
+        <use xlink:href="#e" x="10" y="352"/>
+        <use xlink:href="#e" x="10" y="364"/>
+        <use xlink:href="#e" x="10" y="376"/>
+        <use xlink:href="#e" x="10" y="388"/>
+  </g>
+    <g class="shadowed" transform="translate(66)">
+    <use xlink:href="#f"/>
+        <use xlink:href="#c" x="10" y="148"/>
+        <use xlink:href="#c" x="10" y="160"/>
+        <use xlink:href="#d" x="10" y="172"/>
+        <use xlink:href="#d" x="10" y="184"/>
+        <use xlink:href="#d" x="10" y="196"/>
+        <use xlink:href="#d" x="10" y="208"/>
+        <use xlink:href="#d" x="10" y="220"/>
+        <use xlink:href="#d" x="10" y="232"/>
+        <use xlink:href="#e" x="10" y="244"/>
+        <use xlink:href="#e" x="10" y="256"/>
+        <use xlink:href="#e" x="10" y="268"/>
+        <use xlink:href="#e" x="10" y="280"/>
+        <use xlink:href="#e" x="10" y="292"/>
+        <use xlink:href="#e" x="10" y="304"/>
+        <use xlink:href="#e" x="10" y="316"/>
+        <use xlink:href="#e" x="10" y="328"/>
+        <use xlink:href="#e" x="10" y="340"/>
+        <use xlink:href="#e" x="10" y="352"/>
+        <use xlink:href="#e" x="10" y="364"/>
+        <use xlink:href="#e" x="10" y="376"/>
+        <use xlink:href="#e" x="10" y="388"/>
+  </g>
+    <g class="shadowed" transform="translate(88)">
+    <path fill="#C70039" d="M10 64h16v2H10z"/>
+        <use xlink:href="#b" x="10" y="76"/>
+        <use xlink:href="#b" x="10" y="88"/>
+        <use xlink:href="#c" x="10" y="100"/>
+        <use xlink:href="#c" x="10" y="112"/>
+        <use xlink:href="#c" x="10" y="124"/>
+        <use xlink:href="#c" x="10" y="136"/>
+        <use xlink:href="#c" x="10" y="148"/>
+        <use xlink:href="#c" x="10" y="160"/>
+        <use xlink:href="#d" x="10" y="172"/>
+        <use xlink:href="#d" x="10" y="184"/>
+        <use xlink:href="#d" x="10" y="196"/>
+        <use xlink:href="#d" x="10" y="208"/>
+        <use xlink:href="#d" x="10" y="220"/>
+        <use xlink:href="#d" x="10" y="232"/>
+        <use xlink:href="#e" x="10" y="244"/>
+        <use xlink:href="#e" x="10" y="256"/>
+        <use xlink:href="#e" x="10" y="268"/>
+        <use xlink:href="#e" x="10" y="280"/>
+        <use xlink:href="#e" x="10" y="292"/>
+        <use xlink:href="#e" x="10" y="304"/>
+        <use xlink:href="#e" x="10" y="316"/>
+        <use xlink:href="#e" x="10" y="328"/>
+        <use xlink:href="#e" x="10" y="340"/>
+        <use xlink:href="#e" x="10" y="352"/>
+        <use xlink:href="#e" x="10" y="364"/>
+        <use xlink:href="#e" x="10" y="376"/>
+        <use xlink:href="#e" x="10" y="388"/>
+  </g>
+    <g class="shadowed" transform="translate(110)">
+    <use xlink:href="#a"/>
+        <use xlink:href="#b" x="10" y="40"/>
+        <use xlink:href="#b" x="10" y="52"/>
+        <use xlink:href="#b" x="10" y="64"/>
+        <use xlink:href="#b" x="10" y="76"/>
+        <use xlink:href="#b" x="10" y="88"/>
+        <use xlink:href="#c" x="10" y="100"/>
+        <use xlink:href="#c" x="10" y="112"/>
+        <use xlink:href="#c" x="10" y="124"/>
+        <use xlink:href="#c" x="10" y="136"/>
+        <use xlink:href="#c" x="10" y="148"/>
+        <use xlink:href="#c" x="10" y="160"/>
+        <use xlink:href="#d" x="10" y="172"/>
+        <use xlink:href="#d" x="10" y="184"/>
+        <use xlink:href="#d" x="10" y="196"/>
+        <use xlink:href="#d" x="10" y="208"/>
+        <use xlink:href="#d" x="10" y="220"/>
+        <use xlink:href="#d" x="10" y="232"/>
+        <use xlink:href="#e" x="10" y="244"/>
+        <use xlink:href="#e" x="10" y="256"/>
+        <use xlink:href="#e" x="10" y="268"/>
+        <use xlink:href="#e" x="10" y="280"/>
+        <use xlink:href="#e" x="10" y="292"/>
+        <use xlink:href="#e" x="10" y="304"/>
+        <use xlink:href="#e" x="10" y="316"/>
+        <use xlink:href="#e" x="10" y="328"/>
+        <use xlink:href="#e" x="10" y="340"/>
+        <use xlink:href="#e" x="10" y="352"/>
+        <use xlink:href="#e" x="10" y="364"/>
+        <use xlink:href="#e" x="10" y="376"/>
+        <use xlink:href="#e" x="10" y="388"/>
+  </g>
+    <g class="shadowed" transform="translate(132)">
+    <path fill="#949f31" d="M10 220h16v2H10z"/>
+        <use xlink:href="#e" x="10" y="244"/>
+        <use xlink:href="#e" x="10" y="256"/>
+        <use xlink:href="#e" x="10" y="268"/>
+        <use xlink:href="#e" x="10" y="280"/>
+        <use xlink:href="#e" x="10" y="292"/>
+        <use xlink:href="#e" x="10" y="304"/>
+        <use xlink:href="#e" x="10" y="316"/>
+        <use xlink:href="#e" x="10" y="328"/>
+        <use xlink:href="#e" x="10" y="340"/>
+        <use xlink:href="#e" x="10" y="352"/>
+        <use xlink:href="#e" x="10" y="364"/>
+        <use xlink:href="#e" x="10" y="376"/>
+        <use xlink:href="#e" x="10" y="388"/>
+  </g>
+    <g class="shadowed" transform="translate(154)">
+    <path fill="#949f31" d="M10 208h16v2H10z"/>
+        <use xlink:href="#d" x="10" y="220"/>
+        <use xlink:href="#d" x="10" y="232"/>
+        <use xlink:href="#e" x="10" y="244"/>
+        <use xlink:href="#e" x="10" y="256"/>
+        <use xlink:href="#e" x="10" y="268"/>
+        <use xlink:href="#e" x="10" y="280"/>
+        <use xlink:href="#e" x="10" y="292"/>
+        <use xlink:href="#e" x="10" y="304"/>
+        <use xlink:href="#e" x="10" y="316"/>
+        <use xlink:href="#e" x="10" y="328"/>
+        <use xlink:href="#e" x="10" y="340"/>
+        <use xlink:href="#e" x="10" y="352"/>
+        <use xlink:href="#e" x="10" y="364"/>
+        <use xlink:href="#e" x="10" y="376"/>
+        <use xlink:href="#e" x="10" y="388"/>
+  </g>
+    <g class="shadowed" transform="translate(176)">
+    <path fill="#F4C430" d="M10 160h16v2H10z"/>
+        <use xlink:href="#d" x="10" y="172"/>
+        <use xlink:href="#d" x="10" y="184"/>
+        <use xlink:href="#d" x="10" y="196"/>
+        <use xlink:href="#d" x="10" y="208"/>
+        <use xlink:href="#d" x="10" y="220"/>
+        <use xlink:href="#d" x="10" y="232"/>
+        <use xlink:href="#e" x="10" y="244"/>
+        <use xlink:href="#e" x="10" y="256"/>
+        <use xlink:href="#e" x="10" y="268"/>
+        <use xlink:href="#e" x="10" y="280"/>
+        <use xlink:href="#e" x="10" y="292"/>
+        <use xlink:href="#e" x="10" y="304"/>
+        <use xlink:href="#e" x="10" y="316"/>
+        <use xlink:href="#e" x="10" y="328"/>
+        <use xlink:href="#e" x="10" y="340"/>
+        <use xlink:href="#e" x="10" y="352"/>
+        <use xlink:href="#e" x="10" y="364"/>
+        <use xlink:href="#e" x="10" y="376"/>
+        <use xlink:href="#e" x="10" y="388"/>
+  </g>
+    <g class="shadowed" transform="translate(198)">
+    <use xlink:href="#f"/>
+        <use xlink:href="#c" x="10" y="148"/>
+        <use xlink:href="#c" x="10" y="160"/>
+        <use xlink:href="#d" x="10" y="172"/>
+        <use xlink:href="#d" x="10" y="184"/>
+        <use xlink:href="#d" x="10" y="196"/>
+        <use xlink:href="#d" x="10" y="208"/>
+        <use xlink:href="#d" x="10" y="220"/>
+        <use xlink:href="#d" x="10" y="232"/>
+        <use xlink:href="#e" x="10" y="244"/>
+        <use xlink:href="#e" x="10" y="256"/>
+        <use xlink:href="#e" x="10" y="268"/>
+        <use xlink:href="#e" x="10" y="280"/>
+        <use xlink:href="#e" x="10" y="292"/>
+        <use xlink:href="#e" x="10" y="304"/>
+        <use xlink:href="#e" x="10" y="316"/>
+        <use xlink:href="#e" x="10" y="328"/>
+        <use xlink:href="#e" x="10" y="340"/>
+        <use xlink:href="#e" x="10" y="352"/>
+        <use xlink:href="#e" x="10" y="364"/>
+        <use xlink:href="#e" x="10" y="376"/>
+        <use xlink:href="#e" x="10" y="388"/>
+  </g>
+    <g class="shadowed" transform="translate(220)">
+    <path fill="#50C878" d="M10 232h16v2H10z"/>
+        <use xlink:href="#e" x="10" y="244"/>
+        <use xlink:href="#e" x="10" y="256"/>
+        <use xlink:href="#e" x="10" y="268"/>
+        <use xlink:href="#e" x="10" y="280"/>
+        <use xlink:href="#e" x="10" y="292"/>
+        <use xlink:href="#e" x="10" y="304"/>
+        <use xlink:href="#e" x="10" y="316"/>
+        <use xlink:href="#e" x="10" y="328"/>
+        <use xlink:href="#e" x="10" y="340"/>
+        <use xlink:href="#e" x="10" y="352"/>
+        <use xlink:href="#e" x="10" y="364"/>
+        <use xlink:href="#e" x="10" y="376"/>
+        <use xlink:href="#e" x="10" y="388"/>
+  </g>
+    <g class="shadowed" transform="translate(242)">
+    <use xlink:href="#g"/>
+        <use xlink:href="#c" x="10" y="124"/>
+        <use xlink:href="#c" x="10" y="136"/>
+        <use xlink:href="#c" x="10" y="148"/>
+        <use xlink:href="#c" x="10" y="160"/>
+        <use xlink:href="#d" x="10" y="172"/>
+        <use xlink:href="#d" x="10" y="184"/>
+        <use xlink:href="#d" x="10" y="196"/>
+        <use xlink:href="#d" x="10" y="208"/>
+        <use xlink:href="#d" x="10" y="220"/>
+        <use xlink:href="#d" x="10" y="232"/>
+        <use xlink:href="#e" x="10" y="244"/>
+        <use xlink:href="#e" x="10" y="256"/>
+        <use xlink:href="#e" x="10" y="268"/>
+        <use xlink:href="#e" x="10" y="280"/>
+        <use xlink:href="#e" x="10" y="292"/>
+        <use xlink:href="#e" x="10" y="304"/>
+        <use xlink:href="#e" x="10" y="316"/>
+        <use xlink:href="#e" x="10" y="328"/>
+        <use xlink:href="#e" x="10" y="340"/>
+        <use xlink:href="#e" x="10" y="352"/>
+        <use xlink:href="#e" x="10" y="364"/>
+        <use xlink:href="#e" x="10" y="376"/>
+        <use xlink:href="#e" x="10" y="388"/>
+  </g>
+    <g class="shadowed" transform="translate(264)">
+    <use xlink:href="#d" x="10" y="172"/>
+        <use xlink:href="#d" x="10" y="184"/>
+        <use xlink:href="#d" x="10" y="196"/>
+        <use xlink:href="#d" x="10" y="208"/>
+        <use xlink:href="#d" x="10" y="220"/>
+        <use xlink:href="#d" x="10" y="232"/>
+        <use xlink:href="#e" x="10" y="244"/>
+        <use xlink:href="#e" x="10" y="256"/>
+        <use xlink:href="#e" x="10" y="268"/>
+        <use xlink:href="#e" x="10" y="280"/>
+        <use xlink:href="#e" x="10" y="292"/>
+        <use xlink:href="#e" x="10" y="304"/>
+        <use xlink:href="#e" x="10" y="316"/>
+        <use xlink:href="#e" x="10" y="328"/>
+        <use xlink:href="#e" x="10" y="340"/>
+        <use xlink:href="#e" x="10" y="352"/>
+        <use xlink:href="#e" x="10" y="364"/>
+        <use xlink:href="#e" x="10" y="376"/>
+        <use xlink:href="#e" x="10" y="388"/>
+  </g>
+    <g class="shadowed" transform="translate(286)">
+    <use xlink:href="#g"/>
+        <use xlink:href="#c" x="10" y="124"/>
+        <use xlink:href="#c" x="10" y="136"/>
+        <use xlink:href="#c" x="10" y="148"/>
+        <use xlink:href="#c" x="10" y="160"/>
+        <use xlink:href="#d" x="10" y="172"/>
+        <use xlink:href="#d" x="10" y="184"/>
+        <use xlink:href="#d" x="10" y="196"/>
+        <use xlink:href="#d" x="10" y="208"/>
+        <use xlink:href="#d" x="10" y="220"/>
+        <use xlink:href="#d" x="10" y="232"/>
+        <use xlink:href="#e" x="10" y="244"/>
+        <use xlink:href="#e" x="10" y="256"/>
+        <use xlink:href="#e" x="10" y="268"/>
+        <use xlink:href="#e" x="10" y="280"/>
+        <use xlink:href="#e" x="10" y="292"/>
+        <use xlink:href="#e" x="10" y="304"/>
+        <use xlink:href="#e" x="10" y="316"/>
+        <use xlink:href="#e" x="10" y="328"/>
+        <use xlink:href="#e" x="10" y="340"/>
+        <use xlink:href="#e" x="10" y="352"/>
+        <use xlink:href="#e" x="10" y="364"/>
+        <use xlink:href="#e" x="10" y="376"/>
+        <use xlink:href="#e" x="10" y="388"/>
+  </g>
+    <g class="shadowed" transform="translate(308)">
+    <use xlink:href="#f"/>
+        <use xlink:href="#c" x="10" y="148"/>
+        <use xlink:href="#c" x="10" y="160"/>
+        <use xlink:href="#d" x="10" y="172"/>
+        <use xlink:href="#d" x="10" y="184"/>
+        <use xlink:href="#d" x="10" y="196"/>
+        <use xlink:href="#d" x="10" y="208"/>
+        <use xlink:href="#d" x="10" y="220"/>
+        <use xlink:href="#d" x="10" y="232"/>
+        <use xlink:href="#e" x="10" y="244"/>
+        <use xlink:href="#e" x="10" y="256"/>
+        <use xlink:href="#e" x="10" y="268"/>
+        <use xlink:href="#e" x="10" y="280"/>
+        <use xlink:href="#e" x="10" y="292"/>
+        <use xlink:href="#e" x="10" y="304"/>
+        <use xlink:href="#e" x="10" y="316"/>
+        <use xlink:href="#e" x="10" y="328"/>
+        <use xlink:href="#e" x="10" y="340"/>
+        <use xlink:href="#e" x="10" y="352"/>
+        <use xlink:href="#e" x="10" y="364"/>
+        <use xlink:href="#e" x="10" y="376"/>
+        <use xlink:href="#e" x="10" y="388"/>
+  </g>
+    <g class="shadowed" transform="translate(330)">
+    <path fill="#C70039" d="M10 78h16v2H10z"/>
+        <use xlink:href="#b" x="10" y="88"/>
+        <use xlink:href="#c" x="10" y="100"/>
+        <use xlink:href="#c" x="10" y="112"/>
+        <use xlink:href="#c" x="10" y="124"/>
+        <use xlink:href="#c" x="10" y="136"/>
+        <use xlink:href="#c" x="10" y="148"/>
+        <use xlink:href="#c" x="10" y="160"/>
+        <use xlink:href="#d" x="10" y="172"/>
+        <use xlink:href="#d" x="10" y="184"/>
+        <use xlink:href="#d" x="10" y="196"/>
+        <use xlink:href="#d" x="10" y="208"/>
+        <use xlink:href="#d" x="10" y="220"/>
+        <use xlink:href="#d" x="10" y="232"/>
+        <use xlink:href="#e" x="10" y="244"/>
+        <use xlink:href="#e" x="10" y="256"/>
+        <use xlink:href="#e" x="10" y="268"/>
+        <use xlink:href="#e" x="10" y="280"/>
+        <use xlink:href="#e" x="10" y="292"/>
+        <use xlink:href="#e" x="10" y="304"/>
+        <use xlink:href="#e" x="10" y="316"/>
+        <use xlink:href="#e" x="10" y="328"/>
+        <use xlink:href="#e" x="10" y="340"/>
+        <use xlink:href="#e" x="10" y="352"/>
+        <use xlink:href="#e" x="10" y="364"/>
+        <use xlink:href="#e" x="10" y="376"/>
+        <use xlink:href="#e" x="10" y="388"/>
+  </g>
+</svg>

@@ -2,16 +2,13 @@ package gy.roach.radio
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -54,17 +51,17 @@ fun AboutScreen(
         // App title
         Text(
             text = "Radio Guyana Player",
-            style = MaterialTheme.typography.h4,
+            style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colors.onBackground,
+            color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
         // App version
         Text(
             text = "Version 1.1",
-            style = MaterialTheme.typography.subtitle1,
-            color = MaterialTheme.colors.onBackground.copy(alpha = 0.7f),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
             modifier = Modifier.padding(bottom = 24.dp)
         )
 
@@ -73,26 +70,28 @@ fun AboutScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            elevation = 0.dp,
+            elevation = CardDefaults.cardElevation(),
             shape = RoundedCornerShape(10.dp),
-            backgroundColor = MaterialTheme.colors.surface
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            )
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
                 Text(
                     text = "About",
-                    style = MaterialTheme.typography.h5,
+                    style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colors.onSurface,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
                 Text(
                     text = "Radio Guyana Player is a multiplatform application that allows you to listen to various Guyanese radio stations. The app provides access to a curated list of radio stations broadcasting Guyanese music, news, and entertainment.",
-                    style = MaterialTheme.typography.body1,
+                    style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(bottom = 16.dp),
-                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
             }
         }
@@ -102,25 +101,27 @@ fun AboutScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            elevation = 0.dp,
+            elevation = CardDefaults.cardElevation(),
             shape = RoundedCornerShape(10.dp),
-            backgroundColor = MaterialTheme.colors.surface
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            )
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
                 Text(
                     text = "Features",
-                    style = MaterialTheme.typography.h5,
+                    style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colors.onSurface,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
                 Text(
                     text = "• Listen to multiple Guyanese radio stations\n• Easy station selection\n• Audio visualization\n• Dark and light theme support\n• iOS-inspired design",
-                    style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
             }
         }
@@ -130,25 +131,27 @@ fun AboutScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            elevation = 0.dp,
+            elevation = CardDefaults.cardElevation(),
             shape = RoundedCornerShape(10.dp),
-            backgroundColor = MaterialTheme.colors.surface
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            )
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
                 Text(
                     text = "Release Notes",
-                    style = MaterialTheme.typography.h5,
+                    style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colors.onSurface,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
                 Text(
                     text = "Check out the latest features and updates in our release notes.",
-                    style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
@@ -156,8 +159,8 @@ fun AboutScreen(
                     onClick = onNavigateToReleaseNotes,
                     modifier = Modifier.align(Alignment.End),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = MaterialTheme.colors.primary,
-                        contentColor = MaterialTheme.colors.onPrimary
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
                     Text("View Release Notes")
@@ -170,25 +173,27 @@ fun AboutScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            elevation = 0.dp,
+            elevation = CardDefaults.cardElevation(),
             shape = RoundedCornerShape(10.dp),
-            backgroundColor = MaterialTheme.colors.surface
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            )
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
                 Text(
                     text = "Credits",
-                    style = MaterialTheme.typography.h5,
+                    style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colors.onSurface,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
                 Text(
                     text = "Developed with Kotlin Multiplatform and Compose Multiplatform.\n\nAll radio stations are property of their respective owners.",
-                    style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
             }
         }
@@ -198,19 +203,21 @@ fun AboutScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            elevation = 0.dp,
+            elevation = CardDefaults.cardElevation(),
             shape = RoundedCornerShape(10.dp),
-            backgroundColor = MaterialTheme.colors.surface
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            )
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
                 Text(
                     text = "Developer",
-                    style = MaterialTheme.typography.h5,
+                    style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(bottom = 8.dp),
-                    color = MaterialTheme.colors.onSurface
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 // Clickable website link
@@ -220,13 +227,13 @@ fun AboutScreen(
                 ) {
                     Text(
                         text = "Visit our website: ",
-                        style = MaterialTheme.typography.body1,
-                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                     )
                     Text(
                         text = "https://roach.gy",
-                        style = MaterialTheme.typography.body1.copy(
-                            color = MaterialTheme.colors.primary,
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.SemiBold
                         )
                     )
@@ -237,8 +244,8 @@ fun AboutScreen(
         // Copyright
         Text(
             text = "© 2025 Radio Guyana Player",
-            style = MaterialTheme.typography.caption,
-            color = MaterialTheme.colors.onBackground.copy(alpha = 0.5f),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 24.dp, bottom = 32.dp)
         )
@@ -250,6 +257,7 @@ fun AboutScreen(
  *
  * @param onNavigateToMain Callback to navigate back to the main screen
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutTopBar(
     onNavigateToMain: () -> Unit
@@ -258,23 +266,23 @@ fun AboutTopBar(
         title = {
             Text(
                 text = "About",
-                style = MaterialTheme.typography.h6,
-                color = MaterialTheme.colors.onSurface
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface
             )
         },
         navigationIcon = {
             // Home button - iOS style
             IconButton(onClick = onNavigateToMain) {
                 // iOS-style home icon
-
                 Icon(
                     imageVector = Icons.Default.Home,
-                    tint = MaterialTheme.colors.onSurface,
+                    tint = MaterialTheme.colorScheme.onSurface,
                     contentDescription = "Home",
                 )
             }
         },
-        backgroundColor = MaterialTheme.colors.surface,
-        elevation = 8.dp
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     )
 }

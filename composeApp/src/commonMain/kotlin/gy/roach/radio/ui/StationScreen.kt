@@ -1,14 +1,18 @@
 package gy.roach.radio.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import gy.roach.radio.StationItem
 import gy.roach.radio.viewmodel.StationViewModel
@@ -47,7 +51,7 @@ fun StationScreen(
         ) {
             Text(
                 text = "Radio Stations",
-                style = MaterialTheme.typography.h6
+                style = MaterialTheme.typography.titleLarge
             )
             
             IconButton(
@@ -70,11 +74,11 @@ fun StationScreen(
         error?.let { errorMessage ->
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                backgroundColor = MaterialTheme.colors.error
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
             ) {
                 Text(
                     text = errorMessage,
-                    color = MaterialTheme.colors.onError,
+                    color = MaterialTheme.colorScheme.onError,
                     modifier = Modifier.padding(16.dp)
                 )
             }
@@ -101,7 +105,7 @@ fun StationScreen(
 fun StationCard(station: StationItem) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -109,20 +113,38 @@ fun StationCard(station: StationItem) {
         ) {
             Text(
                 text = station.label,
-                style = MaterialTheme.typography.h6
+                style = MaterialTheme.typography.titleLarge
             )
             
             Text(
                 text = station.typeAsString(),
-                style = MaterialTheme.typography.body2,
-                color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
             )
             
             Text(
                 text = station.url,
-                style = MaterialTheme.typography.caption,
-                color = MaterialTheme.colors.onSurface.copy(alpha = 0.5f)
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
             )
         }
+    }
+}
+
+@Composable
+fun IosCard(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    Surface(
+        modifier = modifier
+            .clip(RoundedCornerShape(10.dp)), // iOS typically uses smaller corner radii
+        color = Color(0xFFF2F2F7), // iOS light gray background color
+        // iOS cards have very subtle shadows
+        shadowElevation = 1.dp,
+        tonalElevation = 0.dp,
+        border = BorderStroke(0.5.dp, Color(0xFFD1D1D6)) // Subtle border
+    ) {
+        content()
     }
 }

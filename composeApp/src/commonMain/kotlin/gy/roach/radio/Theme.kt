@@ -1,23 +1,9 @@
 package gy.roach.radio
 
+
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.Colors
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
-import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Typography
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -189,81 +175,11 @@ class ThemeState {
 val LocalThemeState = compositionLocalOf { ThemeState() }
 
 // Compatibility layer for Material Colors and Typography
-private val LocalColors = staticCompositionLocalOf<Colors> {
-    error("No Colors provided")
-}
 
-private val LocalTypography = staticCompositionLocalOf<androidx.compose.material.Typography> {
-    error("No Typography provided")
-}
 
-// Extension properties to access Colors and Typography from MaterialTheme
-// This allows existing code to continue using MaterialTheme.colors and MaterialTheme.typography
-object MaterialTheme {
-    val colors: Colors
-        @Composable
-        get() = LocalColors.current
-
-    val typography: androidx.compose.material.Typography
-        @Composable
-        get() = LocalTypography.current
-}
 
 // Convert Material3 ColorScheme to Material Colors for compatibility
-@Composable
-private fun colorSchemeToColors(colorScheme: ColorScheme, isDark: Boolean): Colors {
-    return if (isDark) {
-        darkColors(
-            primary = colorScheme.primary,
-            primaryVariant = colorScheme.primaryContainer,
-            secondary = colorScheme.secondary,
-            secondaryVariant = colorScheme.secondaryContainer,
-            background = colorScheme.background,
-            surface = colorScheme.surface,
-            error = colorScheme.error,
-            onPrimary = colorScheme.onPrimary,
-            onSecondary = colorScheme.onSecondary,
-            onBackground = colorScheme.onBackground,
-            onSurface = colorScheme.onSurface,
-            onError = colorScheme.onError
-        )
-    } else {
-        lightColors(
-            primary = colorScheme.primary,
-            primaryVariant = colorScheme.primaryContainer,
-            secondary = colorScheme.secondary,
-            secondaryVariant = colorScheme.secondaryContainer,
-            background = colorScheme.background,
-            surface = colorScheme.surface,
-            error = colorScheme.error,
-            onPrimary = colorScheme.onPrimary,
-            onSecondary = colorScheme.onSecondary,
-            onBackground = colorScheme.onBackground,
-            onSurface = colorScheme.onSurface,
-            onError = colorScheme.onError
-        )
-    }
-}
 
-// Convert Material3 Typography to Material Typography for compatibility
-@Composable
-private fun typographyToMaterialTypography(typography: Typography): androidx.compose.material.Typography {
-    return androidx.compose.material.Typography(
-        h1 = typography.displayLarge,
-        h2 = typography.displayMedium,
-        h3 = typography.displaySmall,
-        h4 = typography.headlineLarge,
-        h5 = typography.titleLarge,
-        h6 = typography.titleMedium,
-        subtitle1 = typography.bodyLarge,
-        subtitle2 = typography.bodyMedium,
-        body1 = typography.bodyLarge,
-        body2 = typography.bodyMedium,
-        button = typography.labelLarge,
-        caption = typography.labelMedium,
-        overline = typography.labelSmall
-    )
-}
 
 @Composable
 fun RadioGuyanaTheme(
@@ -282,15 +198,12 @@ fun RadioGuyanaTheme(
         LightColorScheme
     }
 
-    // Create compatible objects for Material
-    val colors = colorSchemeToColors(colorScheme, themeState.isDarkTheme)
-    val materialTypography = typographyToMaterialTypography(AppTypography)
+
 
     // Provide the theme state, colors, and typography to the composition
     CompositionLocalProvider(
-        LocalThemeState provides themeState,
-        LocalColors provides colors,
-        LocalTypography provides materialTypography
+        LocalThemeState provides themeState
+
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
