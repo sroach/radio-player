@@ -60,13 +60,24 @@ actual fun SplashScreen(onSplashFinished: () -> Unit) {
 
         // App name text at the bottom
         Text(
-            text = "Radio Guyana Player",
+            text = "GY Tunes",
             color = MaterialTheme.colorScheme.onPrimary,
-            fontSize = 24.sp,
+            fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 50.dp)
+                .alpha(alphaAnim.value)
+        )
+
+        Text(
+            text = "Your Sound of Home",
+            color = MaterialTheme.colorScheme.onPrimary,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 30.dp)
                 .alpha(alphaAnim.value)
         )
     }
