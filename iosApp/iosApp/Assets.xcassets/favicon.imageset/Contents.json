@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "favicon.svg",
+      "filename" : "guyanese_flag_radio_wave.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "guyanese_flag_radio_wave 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "guyanese_flag_radio_wave 2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -3,7 +3,6 @@ package gy.roach.radio
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.HTMLAudioElement
-import org.w3c.dom.events.Event
 
 /**
  * WebAssembly implementation of the AudioPlayer interface using HTML5 Audio element.
@@ -19,35 +18,37 @@ class WasmJsAudioPlayer : AudioPlayer {
         try {
             // Create a new audio element
             val audio = document.createElement("audio") as HTMLAudioElement
+
+            // Assign early to avoid races if events fire quickly
+            audioElement = audio
+            playing = false
+
+            // Configure source and playback properties
             audio.src = url
             audio.autoplay = true
+            audio.preload = "auto"
 
-            // Set up event listeners using addEventListener instead of direct property assignment
-            audio.addEventListener("playing", {
+            // Set up event listeners
+            audio.addEventListener("playing") {
                 playing = true
-                null // Return null to satisfy the JsAny? return type
-            })
+                null
+            }
 
-            audio.addEventListener("ended", {
+            audio.addEventListener("ended") {
                 playing = false
                 audioElement = null
-                null // Return null to satisfy the JsAny? return type
-            })
+                null
+            }
 
-            // We'll use a timeout to check if playback started successfully
-            window.setTimeout({
-                if (audioElement != null && !playing) {
-                    window.alert("Failed to play audio. Please try again.")
-                    stop()
-                }
-                null // Return null to satisfy the JsAny? return type
-            }, 5000) // 5 seconds timeout
-
-            audioElement = audio
+            audio.addEventListener("error") {
+                // Playback error event from the media element
+                playing = false
+                null
+            }
 
             // Start playback
             audio.play()
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             window.alert("Error setting up audio player: ${e.message}")
             playing = false
             audioElement = null
@@ -56,11 +57,18 @@ class WasmJsAudioPlayer : AudioPlayer {
 
     override fun stop() {
         try {
-            audioElement?.pause()
+            audioElement?.let { audio ->
+                try {
+                    audio.pause()
+                } catch (_: Throwable) { }
+                // Clear source to release any network activity
+                audio.src = ""
+            }
+        } catch (e: Throwable) {
+            window.alert("Error stopping audio: ${e.message}")
+        } finally {
             audioElement = null
             playing = false
-        } catch (e: Exception) {
-            window.alert("Error stopping audio: ${e.message}")
         }
     }
 

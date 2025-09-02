@@ -45,15 +45,19 @@ fun ReleaseNotesScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            elevation = CardDefaults.cardElevation(),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
             shape = RoundedCornerShape(10.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            border = androidx.compose.foundation.BorderStroke(
+                width = 0.5.dp,
+                color = MaterialTheme.colorScheme.outline
+            )
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
                 Text(
-                    text = "Version 1.2",
+                    text = "Version 1.3 (2025-09-02)",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -68,7 +72,7 @@ fun ReleaseNotesScreen(
                 )
 
                 Text(
-                    text = "• Added advanced audio analysis for iOS\n• Implemented platform-specific theme adaptations\n• New equalizer visualization\n• Enhanced station screen UI\n• Improved configuration management\n• Added album cover support\n• Optimized splash screen across all platforms",
+                    text = "• Settings: Added top-left Home button and proper navigation\n• Theme: App now uses dynamic color schemes via ModernThemeState\n• Theme: Dark mode toggle fixed and applied app-wide\n• Settings: Selecting a color now updates the app theme immediately\n• UI: Minor polish to top bars and surfaces",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
@@ -80,9 +84,13 @@ fun ReleaseNotesScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            elevation = CardDefaults.cardElevation(),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
             shape = RoundedCornerShape(10.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            border = androidx.compose.foundation.BorderStroke(
+                width = 0.5.dp,
+                color = MaterialTheme.colorScheme.outline
+            )
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
@@ -115,9 +123,13 @@ fun ReleaseNotesScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            elevation = CardDefaults.cardElevation(),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
             shape = RoundedCornerShape(10.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            border = androidx.compose.foundation.BorderStroke(
+                width = 0.5.dp,
+                color = MaterialTheme.colorScheme.outline
+            )
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
@@ -150,9 +162,13 @@ fun ReleaseNotesScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            elevation = CardDefaults.cardElevation(),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
             shape = RoundedCornerShape(10.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            border = androidx.compose.foundation.BorderStroke(
+                width = 0.5.dp,
+                color = MaterialTheme.colorScheme.outline
+            ),
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
@@ -177,9 +193,13 @@ fun ReleaseNotesScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            elevation = CardDefaults.cardElevation(),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
             shape = RoundedCornerShape(10.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            border = androidx.compose.foundation.BorderStroke(
+                width = 0.5.dp,
+                color = MaterialTheme.colorScheme.outline
+            ),
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
@@ -239,7 +259,9 @@ fun ReleaseNotesTopBar(
                 )
             }
         },
-        colors = TopAppBarDefaults.topAppBarColors(),
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.background
+        ),
 
     )
 }

@@ -75,7 +75,7 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 // iOS-inspired typography for Material3
-private val AppTypography = Typography(
+val AppTypography = Typography(
     // Display styles
     displayLarge = TextStyle(
         fontWeight = FontWeight.Light,

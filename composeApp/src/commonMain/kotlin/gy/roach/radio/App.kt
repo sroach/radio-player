@@ -19,6 +19,9 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import radio_guyana_player.composeapp.generated.resources.*
+import gy.roach.radio.theme.ModernThemeState
+import gy.roach.radio.theme.RadioGuyanaTheme
+
 
 @Preview
 @Composable
@@ -30,23 +33,25 @@ fun App(themeState: ThemeState? = null) = AppTheme {
     // Navigation state
     val navigationState = rememberNavigationState()
 
-    // Settings state
-    val settingsState = rememberSettingsState()
+// Modern theme state for the new color system
+    val modernThemeState = remember { ModernThemeState() }
 
-    val isDark = currentThemeState.isDarkTheme
+
+    val isDark = modernThemeState.isDarkTheme
 
     val icon = remember(isDark) {
         if (isDark) Res.drawable.ic_light_mode
         else Res.drawable.ic_dark_mode
     }
 
-    // We still need the theme here for the preview and other platforms
-    RadioGuyanaTheme(darkTheme = currentThemeState.isDarkTheme) {
+    // Apply modern dynamic theme based on selected color and dark mode
+    RadioGuyanaTheme(themeState = modernThemeState) {
         // Audio player state
         val audioPlayer = remember { getAudioPlayer() }
         var isPlaying by remember { mutableStateOf(false) }
         var selectedStationIndex by remember { mutableStateOf(0) }
         val station = remember { Station() }
+        val isRefreshing by station.isRefreshing.collectAsState()
         val selectedStation = remember(selectedStationIndex) { station.item(selectedStationIndex) }
 
         // Update isPlaying state when the component is recomposed or when selectedStationIndex changes
@@ -90,11 +95,9 @@ fun App(themeState: ThemeState? = null) = AppTheme {
                                 )
                                 // Theme toggle
                                 IconButton(
-                                    onClick = { currentThemeState.toggleTheme()},
+                                    onClick = { modernThemeState.toggleDarkMode() },
                                     colors = IconButtonDefaults.iconButtonColors(
                                         contentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.85f)
-
-
                                     )
                                 ) {
 
@@ -116,6 +119,7 @@ fun App(themeState: ThemeState? = null) = AppTheme {
                     is Screen.ReleaseNotes -> {
                         ReleaseNotesTopBar(onNavigateToAbout = { navigationState.navigateToAbout() })
                     }
+
                 }
             },
             bottomBar = {
@@ -129,7 +133,6 @@ fun App(themeState: ThemeState? = null) = AppTheme {
                             selectedStation = selectedStation,
                             isPlaying = isPlaying,
                             audioPlayer = audioPlayer,
-                            settingsState = settingsState,
                             onNavigateToSettings = { navigationState.navigateToSettings() },
                             onNavigateToAbout = { navigationState.navigateToAbout() },
                             onStopPlayback = {
@@ -145,7 +148,9 @@ fun App(themeState: ThemeState? = null) = AppTheme {
                                 } else {
                                     println("Error: Station URL is blank")
                                 }
-                            }
+                            },
+                            isRefreshing = isRefreshing,
+                            onRefreshStations = { station.refreshStations() }
                         )
                     }
                 }
@@ -166,7 +171,6 @@ fun App(themeState: ThemeState? = null) = AppTheme {
                             audioPlayer = audioPlayer,
                             selectedStationIndex = selectedStationIndex,
                             isPlaying = isPlaying,
-                            settingsState = settingsState,
                             onStationSelected = { newIndex ->
                                 // If selecting a different station while one is playing,
                                 // stop the current one first
@@ -191,7 +195,7 @@ fun App(themeState: ThemeState? = null) = AppTheme {
                     }
                     is Screen.Settings -> {
                         SettingsScreen(
-                            settingsState = settingsState,
+                            themeState = modernThemeState,
                             onNavigateToMain = { navigationState.navigateToMain() }
                         )
                     }
@@ -211,109 +215,79 @@ fun StationItemCard(
     stationItem: StationItem,
     isSelected: Boolean = false,
     isPlaying: Boolean = false,
-    audioPlayer: AudioPlayer? = null,
-    settingsState: SettingsState? = null,
     onClick: () -> Unit = {}
 ) {
-    // iOS-native card with subtle styling and lighter elevation
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 2.dp) // Reduced vertical padding to decrease space between cards
-            .clickable {
-                // Perform the onClick action
-                onClick()
-            },
-
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp), // Lighter elevation for iOS look
-        shape = RoundedCornerShape(8.dp), // iOS typically uses 8-10dp corner radius
+            .padding(horizontal = 16.dp, vertical = 2.dp)
+            .clickable { onClick() },
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp), // Remove elevation for minimalist look
+        shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFF2F2F7) // iOS systemGray6 color for background
+            containerColor = MaterialTheme.colorScheme.surface
         ),
         border = androidx.compose.foundation.BorderStroke(
-            width = 0.5.dp,
-            color = Color(0xFFE5E5EA) // iOS light gray border color
+            width = if (isSelected) 2.dp else 0.5.dp,
+            color = if (isSelected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.outline
         )
     ) {
-        // Station information layout with left accent bar for selection
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    start = if (isSelected) 0.dp else 18.dp,
-                    top = 18.dp,
-                    end = 18.dp,
-                    bottom = 18.dp
-                ), // Padding on all sides except left when selected
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start // Changed from SpaceBetween to Start for better control
+            horizontalArrangement = Arrangement.Start
         ) {
-            // Left section with accent bar, station number and info
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth() // Use full width now that play button is removed
+            // Minimalist number indicator
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(40.dp)
+                    .background(
+                        color = if (isSelected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.surfaceVariant,
+                        shape = CircleShape
+                    )
             ) {
-                // Left accent bar for selection
-                if (isSelected) {
-                    Box(
-                        modifier = Modifier
-                            .width(4.dp)
-                            .height(56.dp) // Match the height of the row content
-                            .background(MaterialTheme.colorScheme.primary)
-                    )
-                    Spacer(modifier = Modifier.width(14.dp)) // Add spacing after the accent bar
-                }
+                Text(
+                    text = "${stationItem.index + 1}",
+                    color = if (isSelected) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                )
+            }
 
-                // Create a random color from a pleasing palette (same as album cover)
-                val circleColor = when (stationItem.index % 5) {
-                    0 -> Color(0xFFFF7EB3) // Pink
-                    1 -> Color(0xFF7AFCFF) // Cyan
-                    2 -> Color(0xFFFEFF9C) // Yellow
-                    3 -> Color(0xFFFF9E7A) // Orange
-                    else -> Color(0xFF9CFFBA) // Green
-                }.copy(alpha = 0.9f)
+            Spacer(modifier = Modifier.width(16.dp))
 
-                // Display the item number inside a circle with the album cover color
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = stationItem.label,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = stationItem.typeAsString(),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            // Playing indicator
+            if (isPlaying) {
                 Box(
-                    contentAlignment = Alignment.Center,
                     modifier = Modifier
-                        .size(44.dp) // iOS standard icon size
-                        .clip(CircleShape)
-                        .background(circleColor)
-                ) {
-                    Text(
-                        text = "${stationItem.index + 1}",
-                        color = Color.Black.copy(alpha = 0.8f),
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(12.dp)) // iOS uses tighter spacing
-
-                // Display the station's information
-                Column(
-                    modifier = Modifier.weight(1f) // Give the text column a weight to control its space
-                ) {
-                    // Title with SF Pro text styling - no more maxLines limit
-                    Text(
-                        text = stationItem.label,
-                        style = MaterialTheme.typography.headlineSmall.copy(
-                            fontWeight = FontWeight.Medium // SF Pro typically uses Medium weight for headings
-                        ), 
-                        color = Color(0xFF000000) // iOS uses pure black for primary text
-                    )
-
-                    Spacer(modifier = Modifier.height(2.dp)) // iOS uses tighter spacing
-
-                    // Subtitle with SF Pro text styling - no more maxLines limit
-                    Text(
-                        text = stationItem.typeAsString(),
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontWeight = FontWeight.Normal // SF Pro uses Normal weight for body text
-                        ),
-                        color = Color(0xFF8E8E93) // iOS systemGray color for secondary text
-                    )
-                }
+                        .size(8.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.onSurface,
+                            shape = CircleShape
+                        )
+                )
             }
         }
     }

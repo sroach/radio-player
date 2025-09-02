@@ -2,6 +2,9 @@ package gy.roach.radio
 
 import android.media.MediaPlayer
 import android.util.Log
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 /**
  * Android implementation of the AudioPlayer interface using MediaPlayer.
@@ -9,6 +12,11 @@ import android.util.Log
 class AndroidAudioPlayer : AudioPlayer {
     private var mediaPlayer: MediaPlayer? = null
     private var playing = false
+
+    // For now, provide simulated frequency data for Android
+    // TODO: Implement real audio analysis using Visualizer API
+    private val _frequencyData = MutableStateFlow(FloatArray(16) { 0.1f })
+    private val frequencyData: StateFlow<FloatArray> = _frequencyData.asStateFlow()
 
     override fun play(url: String) {
         // Stop any currently playing audio
@@ -21,6 +29,8 @@ class AndroidAudioPlayer : AudioPlayer {
                 setOnPreparedListener {
                     start()
                     playing = true
+                    // Start simulated frequency data updates
+                    startFrequencyDataSimulation()
                 }
                 setOnCompletionListener {
                     playing = false
@@ -62,6 +72,22 @@ class AndroidAudioPlayer : AudioPlayer {
     override fun isPlaying(): Boolean {
         return playing
     }
+
+
+
+    /**
+     * Start simulated frequency data for visualization.
+     * TODO: Replace with real audio analysis using Android's Visualizer API
+     */
+    private fun startFrequencyDataSimulation() {
+        // Simple simulation - replace with real audio analysis
+        val simulatedData = FloatArray(16) { index ->
+            0.2f + (kotlin.random.Random.nextFloat() * 0.6f)
+        }
+        _frequencyData.value = simulatedData
+    }
+
+
 }
 
 /**

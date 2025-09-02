@@ -1,5 +1,7 @@
 package gy.roach.radio
 
+import kotlinx.coroutines.flow.StateFlow
+
 /**
  * Interface for platform-specific audio player implementations.
  */
@@ -29,6 +31,9 @@ interface AudioPlayer {
      * @return True if audio is playing, false otherwise.
      */
     fun isPlaying(): Boolean
+
+
+
 }
 
 /**

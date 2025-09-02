@@ -42,7 +42,6 @@ kotlin {
             isStatic = true
 
             // Pass API key to Info.plist
-            embedBitcode = org.jetbrains.kotlin.gradle.plugin.mpp.BitcodeEmbeddingMode.DISABLE
             freeCompilerArgs += listOf(
                 "-Xbinary=bundleId=gy.roach.radio",
                 "-Xbinary=bundleVersion=1.2",
@@ -57,7 +56,7 @@ kotlin {
 
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
-        moduleName = "composeApp"
+        outputModuleName = "composeApp"
         browser {
             val rootDirPath = project.rootDir.path
             val projectDirPath = project.projectDir.path
