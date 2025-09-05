@@ -16,7 +16,7 @@ kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_19)
+            jvmTarget.set(JvmTarget.JVM_21)
         }
     }
 
@@ -62,6 +62,8 @@ kotlin {
             val projectDirPath = project.projectDir.path
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
+                // Add specific configuration for Skia WASM compatibility
+                experiments += "asyncWebAssembly"
                 devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
                     static = (static ?: mutableListOf()).apply {
                         // Serve sources to debug inside browser
@@ -73,6 +75,48 @@ kotlin {
         }
         binaries.executable()
     }
+    tasks.register("copyComposeResources") {
+        doLast {
+            copy {
+                from("src/commonMain/composeResources")
+                into("build/processedResources/wasmJs/main")
+            }
+        }
+    }
+
+    tasks.register<Copy>("assembleWebDist") {
+        dependsOn("wasmJsBrowserProductionWebpack", "generateWebConfig")
+
+        // Set duplicate handling strategy
+        duplicatesStrategy = DuplicatesStrategy.WARN
+
+        // Clear destination first
+        doFirst {
+            delete("build/dist/wasmJs/productionExecutable")
+        }
+
+        // 1. Copy webpack output first (WASM files and JS) - highest priority
+        from("build/kotlin-webpack/wasmJs/productionExecutable") {
+            include("*.js", "*.wasm", "*.LICENSE.txt")
+        }
+
+        // 2. Copy processed resources (including composeResources) - medium priority
+        from("build/processedResources/wasmJs/main")
+
+        // 3. Copy source resources last - lowest priority (will be overwritten if duplicates)
+        from("src/wasmJsMain/resources") {
+            exclude("**/*.kt")
+        }
+
+        into("build/dist/wasmJs/productionExecutable")
+
+        doLast {
+            println("Web distribution ready at: build/dist/wasmJs/productionExecutable/")
+        }
+    }
+
+
+
 
     // Task to generate config.js file with API key for WASM/Web
     tasks.register("generateWebConfig") {
@@ -95,12 +139,59 @@ kotlin {
 
             // Create the config.js file
             val configFile = project.file("src/wasmJsMain/resources/config/config.js")
-            configFile.writeText("""
+            configFile.writeText(
+                """
                 // This file is generated during build. Do not edit manually.
                 window.APP_CONFIG = {
                     STATIONS_API_KEY: "$apiKey"
                 };
-            """.trimIndent())
+
+                // Cache-busting wrapper for dynamically loaded .wasm/.mjs (Skiko) assets
+                (function() {
+                  try {
+                    var versionTag = 'v=' + (window.APP_BUILD_ID || Date.now());
+                    var origFetch = window.fetch;
+                    if (typeof origFetch === 'function') {
+                      window.fetch = function(input, init) {
+                        try {
+                          var url = (typeof input === 'string') ? input : (input && input.url);
+                          if (url) {
+                            var u = new URL(url, window.location.href);
+                            if (u.pathname.endsWith('.wasm') || u.pathname.endsWith('.mjs') || u.pathname.indexOf('skiko') !== -1) {
+                              if (!u.searchParams.has('v')) {
+                                u.searchParams.set('v', versionTag);
+                              }
+                              input = u.toString();
+                            }
+                          }
+                        } catch (e) { }
+                        return origFetch.call(this, input, init);
+                      };
+                    }
+                  } catch (e) { }
+                })();
+
+                // Global handler to avoid Unhandled Promise Rejection logs for known media/autoplay issues
+                window.addEventListener('unhandledrejection', function (event) {
+                  try {
+                    var reason = event && event.reason;
+                    var msg = reason && (reason.message || String(reason));
+                    var isMediaError = msg && (
+                      msg.indexOf('play() failed') !== -1 ||
+                      msg.indexOf('The play() request was interrupted') !== -1 ||
+                      msg.indexOf('NotAllowedError') !== -1 ||
+                      msg.indexOf('AbortError') !== -1 ||
+                      msg.indexOf('NotSupportedError') !== -1
+                    );
+                    if (!msg || isMediaError || (reason && reason.name === 'WebAssembly.Exception')) {
+                      console.warn('[Handled rejection]', reason);
+                      event.preventDefault();
+                      return;
+                    }
+                  } catch (e) { }
+                });
+            """.trimIndent()
+            )
 
             println("Generated config.js with API key for WASM/Web")
         }
@@ -109,10 +200,12 @@ kotlin {
     // Make sure the config file is generated before the WASM/Web build
     tasks.named("wasmJsBrowserDevelopmentWebpack") {
         dependsOn("generateWebConfig")
+        dependsOn("generateComposeResClass")
     }
 
     tasks.named("wasmJsBrowserProductionWebpack") {
         dependsOn("generateWebConfig")
+        dependsOn("generateComposeResClass")
     }
 
     sourceSets {
@@ -134,8 +227,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation(libs.cupertino)
-            implementation(libs.materialKolor)
+
             implementation(libs.kotlinx.serialization.json)
 
             // Ktor
@@ -206,8 +298,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_19
-        targetCompatibility = JavaVersion.VERSION_19
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     buildFeatures {
         compose = true
@@ -235,3 +327,4 @@ compose.desktop {
         }
     }
 }
+

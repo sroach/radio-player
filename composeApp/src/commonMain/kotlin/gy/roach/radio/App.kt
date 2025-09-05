@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import gy.roach.radio.theme.ColorTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -137,14 +138,23 @@ fun App(themeState: ThemeState? = null) = AppTheme {
                             onNavigateToAbout = { navigationState.navigateToAbout() },
                             onStopPlayback = {
                                 // Stop the currently playing station
-                                audioPlayer.stop()
+                                try {
+                                    audioPlayer.stop()
+                                } catch (e: Throwable) {
+                                    println("Error stopping playback: ${e.message}")
+                                }
                                 isPlaying = false
                             },
                             onPlayStation = {
                                 // Play the selected station
                                 if (selectedStation.url.isNotBlank()) {
-                                    audioPlayer.play(selectedStation)
-                                    isPlaying = true
+                                    try {
+                                        audioPlayer.play(selectedStation)
+                                        isPlaying = true
+                                    } catch (e: Throwable) {
+                                        println("Error starting playback: ${e.message}")
+                                        isPlaying = false
+                                    }
                                 } else {
                                     println("Error: Station URL is blank")
                                 }
@@ -175,7 +185,11 @@ fun App(themeState: ThemeState? = null) = AppTheme {
                                 // If selecting a different station while one is playing,
                                 // stop the current one first
                                 if (isPlaying && selectedStationIndex != newIndex) {
-                                    audioPlayer.stop()
+                                    try {
+                                        audioPlayer.stop()
+                                    } catch (e: Throwable) {
+                                        println("Error stopping playback on station change: ${e.message}")
+                                    }
                                     isPlaying = false
                                 }
                                 selectedStationIndex = newIndex
@@ -229,8 +243,10 @@ fun StationItemCard(
         ),
         border = androidx.compose.foundation.BorderStroke(
             width = if (isSelected) 2.dp else 0.5.dp,
-            color = if (isSelected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.outline
+            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
         )
+
+
     ) {
         Row(
             modifier = Modifier

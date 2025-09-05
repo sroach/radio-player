@@ -16,6 +16,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import radio_guyana_player.composeapp.generated.resources.Res
 import radio_guyana_player.composeapp.generated.resources.favicon_xml
+import radio_guyana_player.composeapp.generated.resources.guyanese_flag_radio_wave_icon
 
 /**
  * About screen of the app showing information about the app.
@@ -40,7 +41,7 @@ fun AboutScreen(
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(Res.drawable.favicon_xml),
+                painter = painterResource(Res.drawable.guyanese_flag_radio_wave_icon),
                 contentDescription = "App Logo",
                 modifier = Modifier
                     .size(120.dp)

@@ -22,7 +22,7 @@ fun SyncThemeWithWebCss(themeState: ThemeState) {
                 themeState.isDarkTheme = savedTheme.toBoolean()
             }
         } catch (e: Exception) {
-            window.alert("Failed to load theme preference: ${e.message}")
+            println("Failed to load theme preference: ${e.message}")
         }
     }
 
@@ -44,7 +44,7 @@ fun SyncThemeWithWebCss(themeState: ThemeState) {
         try {
             localStorage.setItem("isDarkTheme", themeState.isDarkTheme.toString())
         } catch (e: Exception) {
-            window.alert("Failed to save theme preference: ${e.message}")
+            println("Failed to save theme preference: ${e.message}")
         }
 
         onDispose { }

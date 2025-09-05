@@ -1,7 +1,6 @@
 package gy.roach.radio
 
 import kotlinx.browser.document
-import kotlinx.browser.window
 import org.w3c.dom.HTMLAudioElement
 
 /**
@@ -31,25 +30,28 @@ class WasmJsAudioPlayer : AudioPlayer {
             // Set up event listeners
             audio.addEventListener("playing") {
                 playing = true
-                null
             }
 
             audio.addEventListener("ended") {
                 playing = false
                 audioElement = null
-                null
             }
 
             audio.addEventListener("error") {
                 // Playback error event from the media element
                 playing = false
-                null
             }
 
             // Start playback
-            audio.play()
+            try {
+                audio.play()
+            } catch (e: Throwable) {
+                // Some browsers may throw synchronously
+                println("audio.play() threw: ${e.message}")
+                playing = false
+            }
         } catch (e: Throwable) {
-            window.alert("Error setting up audio player: ${e.message}")
+            println("Error setting up audio player: ${e.message}")
             playing = false
             audioElement = null
         }
@@ -65,7 +67,7 @@ class WasmJsAudioPlayer : AudioPlayer {
                 audio.src = ""
             }
         } catch (e: Throwable) {
-            window.alert("Error stopping audio: ${e.message}")
+            println("Error stopping audio: ${e.message}")
         } finally {
             audioElement = null
             playing = false
