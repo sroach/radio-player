@@ -1,15 +1,12 @@
 package gy.roach.radio.theme
 
-import gy.roach.radio.theme.*
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import gy.roach.radio.AppTypography
 import gy.roach.radio.LocalThemeState
 import gy.roach.radio.ThemeState
-import gy.roach.radio.theme.ModernThemeState
 
 
 // Proxy theme wrapper only. The actual minimalist theme is defined in MinimalistRadioTheme.kt
@@ -40,3 +37,4 @@ fun RadioGuyanaTheme(
         )
     }
 }
+

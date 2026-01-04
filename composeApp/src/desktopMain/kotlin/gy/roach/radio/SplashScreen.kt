@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import radio_guyana_player.composeapp.generated.resources.Res
 import radio_guyana_player.composeapp.generated.resources.equalizer1
 
@@ -27,6 +28,7 @@ import radio_guyana_player.composeapp.generated.resources.equalizer1
  *
  * @param onSplashFinished Callback to execute when the splash screen animation is complete
  */
+@Preview()
 @Composable
 actual fun SplashScreen(onSplashFinished: () -> Unit) {
     // State to track if the splash screen animation is complete
@@ -58,15 +60,25 @@ actual fun SplashScreen(onSplashFinished: () -> Unit) {
                 .alpha(alphaAnim.value)
         )
 
-        // App name text at the bottom
-        Text(
-            text = "Radio Guyana Player",
+        androidx.compose.material3.Text(
+            text = "GY Tunes",
             color = MaterialTheme.colors.onPrimary,
-            fontSize = 24.sp,
+            fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 50.dp)
+                .alpha(alphaAnim.value)
+        )
+
+        Text(
+            text = "Your Sound of Home",
+            color = MaterialTheme.colors.onPrimary,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 30.dp)
                 .alpha(alphaAnim.value)
         )
     }

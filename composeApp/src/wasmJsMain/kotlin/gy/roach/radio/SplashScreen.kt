@@ -30,7 +30,7 @@ import radio_guyana_player.composeapp.generated.resources.equalizer1
  *
  * @param onSplashFinished Callback to execute when the splash screen animation is complete
  */
-@Preview
+
 @Composable
 actual fun SplashScreen(onSplashFinished: () -> Unit) {
     // State to track if the splash screen animation is complete
@@ -66,15 +66,25 @@ actual fun SplashScreen(onSplashFinished: () -> Unit) {
                 .alpha(alphaAnim.value)
         )
 
-        // App name text at the bottom
         Text(
-            text = "Radio Guyana Player",
+            text = "GY Tunes",
             color = MaterialTheme.colorScheme.onPrimary,
-            fontSize = 24.sp,
+            fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 50.dp)
+                .alpha(alphaAnim.value)
+        )
+
+        Text(
+            text = "Your Sound of Home",
+            color = MaterialTheme.colorScheme.onPrimary,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 30.dp)
                 .alpha(alphaAnim.value)
         )
     }

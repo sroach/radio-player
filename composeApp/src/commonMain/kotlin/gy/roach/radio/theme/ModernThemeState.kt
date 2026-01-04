@@ -9,7 +9,7 @@ import androidx.compose.runtime.setValue
  * Follows iOS design patterns for theme management.
  */
 class ModernThemeState {
-    var selectedTheme by mutableStateOf(ColorTheme.MINIMALIST)
+    var selectedTheme by mutableStateOf(ColorTheme.GOLDEN_ARROWHEAD)
         private set
     
     var isDarkTheme by mutableStateOf(false)

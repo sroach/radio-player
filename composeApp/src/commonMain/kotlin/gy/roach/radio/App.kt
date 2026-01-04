@@ -1,5 +1,14 @@
 package gy.roach.radio
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,10 +20,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import gy.roach.radio.theme.ColorTheme
+import gy.roach.radio.theme.GradientBackgrounds
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -34,11 +45,21 @@ fun App(themeState: ThemeState? = null) = AppTheme {
     // Navigation state
     val navigationState = rememberNavigationState()
 
-// Modern theme state for the new color system
+    // Modern theme state for the new color system
     val modernThemeState = remember { ModernThemeState() }
 
 
     val isDark = modernThemeState.isDarkTheme
+
+    // Animated icon rotation
+    val iconRotation by animateFloatAsState(
+        targetValue = if (isDark) 180f else 0f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "iconRotation"
+    )
 
     val icon = remember(isDark) {
         if (isDark) Res.drawable.ic_light_mode
@@ -65,6 +86,12 @@ fun App(themeState: ThemeState? = null) = AppTheme {
             }
         }
 
+        // Get the current gradient based on theme
+        val currentGradient = GradientBackgrounds.getGradient(
+            theme = modernThemeState.selectedTheme,
+            isDark = modernThemeState.isDarkTheme
+        )
+
         Scaffold(
             topBar = {
                 when (navigationState.currentScreen) {
@@ -74,38 +101,57 @@ fun App(themeState: ThemeState? = null) = AppTheme {
                     is Screen.Main -> {
 
                         Surface(
-                            color = MaterialTheme.colorScheme.background,
-                            tonalElevation = 3.dp
+                            color = Color.Transparent,
+                            tonalElevation = 0.dp
                         ){
-                            Row(
+                            Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(start = 16.dp, top = 32.dp, end = 16.dp, bottom = 16.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ){
-                                Image(
-                                    painter = painterResource(Res.drawable.flag_gy),
-                                    contentDescription = "Flag",
-                                )
-                                // Application title text
-                                Text(
-                                    text = "GY Tunes",
-                                    style = MaterialTheme.typography.titleLarge,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                                // Theme toggle
-                                IconButton(
-                                    onClick = { modernThemeState.toggleDarkMode() },
-                                    colors = IconButtonDefaults.iconButtonColors(
-                                        contentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.85f)
+                                    .background(currentGradient)
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(start = 16.dp, top = 32.dp, end = 16.dp, bottom = 16.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ){
+                                    Image(
+                                        painter = painterResource(Res.drawable.flag_gy),
+                                        contentDescription = "Flag",
                                     )
-                                ) {
-
-                                    Icon(
-                                        imageVector = vectorResource(icon),
-                                        contentDescription = stringResource(Res.string.theme)
+                                    // Application title text
+                                    Text(
+                                        text = "GY Tunes",
+                                        style = MaterialTheme.typography.titleLarge,
+                                        color = MaterialTheme.colorScheme.onBackground
                                     )
+                                    // Animated theme toggle
+                                    IconButton(
+                                        onClick = { modernThemeState.toggleDarkMode() },
+                                        colors = IconButtonDefaults.iconButtonColors(
+                                            contentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.85f)
+                                        )
+                                    ) {
+                                        // Animated icon with crossfade and rotation
+                                        AnimatedContent(
+                                            targetState = isDark,
+                                            transitionSpec = {
+                                                (scaleIn(initialScale = 0.8f) + fadeIn()) togetherWith
+                                                        (scaleOut(targetScale = 0.8f) + fadeOut())
+                                            },
+                                            label = "themeIconTransition"
+                                        ) { dark ->
+                                            Icon(
+                                                imageVector = vectorResource(
+                                                    if (dark) Res.drawable.ic_light_mode
+                                                    else Res.drawable.ic_dark_mode
+                                                ),
+                                                contentDescription = stringResource(Res.string.theme),
+                                                modifier = Modifier.rotate(iconRotation)
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -164,11 +210,15 @@ fun App(themeState: ThemeState? = null) = AppTheme {
                         )
                     }
                 }
-            }
+            },
+            containerColor = Color.Transparent
         ) { paddingValues ->
-            Surface(
-                color = MaterialTheme.colorScheme.background,
-                modifier = Modifier.fillMaxSize().padding(paddingValues)
+            // Gradient background layer
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(currentGradient)
+                    .padding(paddingValues)
             ) {
                 when (navigationState.currentScreen) {
                     is Screen.Splash -> {
@@ -219,91 +269,6 @@ fun App(themeState: ThemeState? = null) = AppTheme {
                         )
                     }
                 }
-            }
-        }
-    }
-}
-
-@Composable
-fun StationItemCard(
-    stationItem: StationItem,
-    isSelected: Boolean = false,
-    isPlaying: Boolean = false,
-    onClick: () -> Unit = {}
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 2.dp)
-            .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp), // Remove elevation for minimalist look
-        shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        border = androidx.compose.foundation.BorderStroke(
-            width = if (isSelected) 2.dp else 0.5.dp,
-            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
-        )
-
-
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
-        ) {
-            // Minimalist number indicator
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .size(40.dp)
-                    .background(
-                        color = if (isSelected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.surfaceVariant,
-                        shape = CircleShape
-                    )
-            ) {
-                Text(
-                    text = "${stationItem.index + 1}",
-                    color = if (isSelected) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
-                )
-            }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = stationItem.label,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Text(
-                    text = stationItem.typeAsString(),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            // Playing indicator
-            if (isPlaying) {
-                Box(
-                    modifier = Modifier
-                        .size(8.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.onSurface,
-                            shape = CircleShape
-                        )
-                )
             }
         }
     }

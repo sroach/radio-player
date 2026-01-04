@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import gy.roach.radio.StationItem
 import gy.roach.radio.viewmodel.StationViewModel
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
  * A screen that demonstrates fetching and displaying stations using the HTTP client.
@@ -24,6 +25,7 @@ import gy.roach.radio.viewmodel.StationViewModel
  * @param viewModel The ViewModel to use for fetching stations
  * @param apiUrl The URL to fetch stations from
  */
+@Preview
 @Composable
 fun StationScreen(
     viewModel: StationViewModel = remember { StationViewModel() },

@@ -1,9 +1,12 @@
 package gy.roach.radio
 
+import androidx.compose.animation.*
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
@@ -16,24 +19,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import gy.roach.radio.theme.GuyanaColors
+import gy.roach.radio.ui.CompactRadioWaves
+import gy.roach.radio.ui.GuyanaLoadingSpinner
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
- * Main screen of the app showing the radio stations list.
- *
- * @param audioPlayer The audio player to use for playback
- * @param selectedStationIndex The index of the currently selected station
- * @param isPlaying Whether audio is currently playing
- * @param settingsState The state object that holds settings preferences
- * @param onStationSelected Callback when a station is selected
- * @param onPlayingStateChanged Callback when the playing state changes
- * @param onNavigateToAbout Callback to navigate to the about screen
- * @param onNavigateToSettings Callback to navigate to the settings screen
+ * Main screen of the app showing the radio stations list with staggered animations.
  */
-
-@Preview
 @Composable
 fun MainScreen(
     audioPlayer: AudioPlayer,
@@ -54,7 +52,7 @@ fun MainScreen(
     val stations by station.stationsFlow.collectAsState()
 
     // Ensure selectedStation is updated when stations change
-    val selectedStation = remember(selectedStationIndex, stations) { 
+    val selectedStation = remember(selectedStationIndex, stations) {
         stations.getOrNull(selectedStationIndex) ?: stations.firstOrNull() ?: station.item(selectedStationIndex)
     }
 
@@ -72,11 +70,21 @@ fun MainScreen(
             stations
         } else {
             stations.filter { stationItem ->
-                stationItem.type.any { type -> 
+                stationItem.type.any { type ->
                     selectedStationTypes.contains(type.trim().lowercase())
                 }
             }
         }
+    }
+
+    // Animation state for staggered reveal
+    var animationTriggered by remember { mutableStateOf(false) }
+
+    LaunchedEffect(filteredStations) {
+        // Reset and trigger animation when stations change
+        animationTriggered = false
+        delay(50) // Small delay to ensure reset
+        animationTriggered = true
     }
 
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -90,21 +98,24 @@ fun MainScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-
                 // Header spacing
                 Spacer(modifier = Modifier.height(0.dp))
 
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth().fillMaxHeight(),
                     verticalArrangement = Arrangement.spacedBy(0.dp)
-
                 ) {
-
-                    items(filteredStations) { stationItem ->
-                        StationItemCard(
+                    itemsIndexed(
+                        items = filteredStations,
+                        key = { _, item -> item.index }
+                    ) { index, stationItem ->
+                        // Staggered animation for each item
+                        AnimatedStationItem(
                             stationItem = stationItem,
                             isSelected = stationItem.index == selectedStationIndex,
                             isPlaying = isPlaying && stationItem.index == selectedStationIndex,
+                            animationDelay = index * 50, // 50ms stagger between items
+                            isVisible = animationTriggered,
                             onClick = {
                                 onStationSelected(stationItem.index)
                             }
@@ -128,7 +139,7 @@ fun MainScreen(
                     ) {
                         // "All" filter chip
                         item {
-                            StationTypeChip(
+                            AnimatedFilterChip(
                                 text = "All",
                                 selected = selectedStationTypes.isEmpty(),
                                 onClick = { selectedStationTypes = emptySet() }
@@ -136,8 +147,9 @@ fun MainScreen(
                         }
 
                         // Type filter chips
-                        items(allStationTypes) { type ->
-                            StationTypeChip(
+                        items(allStationTypes.size) { index ->
+                            val type = allStationTypes[index]
+                            AnimatedFilterChip(
                                 text = type.replaceFirstChar { it.uppercase() },
                                 selected = selectedStationTypes.contains(type),
                                 onClick = {
@@ -157,28 +169,131 @@ fun MainScreen(
 }
 
 /**
- * Custom chip component for station type filtering.
- *
- * @param text The text to display in the chip
- * @param selected Whether the chip is selected
- * @param onClick Callback when the chip is clicked
+ * Animated station item with staggered reveal and selection effects.
  */
 @Composable
-fun StationTypeChip(
+fun AnimatedStationItem(
+    stationItem: StationItem,
+    isSelected: Boolean,
+    isPlaying: Boolean,
+    animationDelay: Int,
+    isVisible: Boolean,
+    onClick: () -> Unit
+) {
+    // Staggered fade and slide animation
+    var itemVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isVisible) {
+        if (isVisible) {
+            delay(animationDelay.toLong())
+            itemVisible = true
+        } else {
+            itemVisible = false
+        }
+    }
+
+    // Animated values for reveal
+    val alpha by animateFloatAsState(
+        targetValue = if (itemVisible) 1f else 0f,
+        animationSpec = tween(
+            durationMillis = 300,
+            easing = EaseOutCubic
+        ),
+        label = "itemAlpha"
+    )
+
+    val offsetY by animateFloatAsState(
+        targetValue = if (itemVisible) 0f else 20f,
+        animationSpec = tween(
+            durationMillis = 300,
+            easing = EaseOutCubic
+        ),
+        label = "itemOffset"
+    )
+
+    // Selection scale animation with bounce
+    val scale by animateFloatAsState(
+        targetValue = if (isSelected) 1.02f else 1f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMedium
+        ),
+        label = "selectionScale"
+    )
+
+    Box(
+        modifier = Modifier
+            .graphicsLayer {
+                this.alpha = alpha
+                this.translationY = offsetY
+                this.scaleX = scale
+                this.scaleY = scale
+            }
+    ) {
+        StationItemCard(
+            stationItem = stationItem,
+            isSelected = isSelected,
+            isPlaying = isPlaying,
+            onClick = onClick
+        )
+    }
+}
+
+/**
+ * Animated filter chip with press effect.
+ */
+@Composable
+fun AnimatedFilterChip(
     text: String,
     selected: Boolean,
     onClick: () -> Unit
 ) {
+    // Scale animation on selection
+    val scale by animateFloatAsState(
+        targetValue = if (selected) 1.05f else 1f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMedium
+        ),
+        label = "chipScale"
+    )
+
+    // Background color animation
+    val backgroundColor by animateColorAsState(
+        targetValue = if (selected)
+            MaterialTheme.colorScheme.primary
+        else
+            MaterialTheme.colorScheme.surface,
+        animationSpec = tween(200),
+        label = "chipBg"
+    )
+
+    val contentColor by animateColorAsState(
+        targetValue = if (selected)
+            MaterialTheme.colorScheme.onPrimary
+        else
+            MaterialTheme.colorScheme.onSurface,
+        animationSpec = tween(200),
+        label = "chipContent"
+    )
+
     Surface(
         modifier = Modifier
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
             .clip(RoundedCornerShape(16.dp))
             .clickable(onClick = onClick),
-        color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
-        contentColor = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+        color = backgroundColor,
+        contentColor = contentColor,
         shape = RoundedCornerShape(16.dp),
         border = androidx.compose.foundation.BorderStroke(
             width = 1.dp,
-            color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+            color = if (selected)
+                MaterialTheme.colorScheme.primary
+            else
+                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
         )
     ) {
         Text(
@@ -191,14 +306,7 @@ fun StationTypeChip(
 
 /**
  * Bottom bar with station info and controls.
- *
- * @param selectedStation The currently selected station
- * @param isPlaying Whether audio is currently playing
- * @param audioPlayer The audio player to use for playback
- * @param onNavigateToSettings Callback to navigate to settings screen
- * @param onNavigateToAbout Callback to navigate to about screen
- * @param onStopPlayback Callback to stop the currently playing station
- * @param onPlayStation Callback to play the selected station
+ * Features a frosted glass effect for visual depth.
  */
 @Composable
 fun MainBottomBar(
@@ -215,82 +323,79 @@ fun MainBottomBar(
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        // Subtle line at the top of the bottom bar
-        HorizontalDivider(
-            Modifier.fillMaxWidth(),
-            0.5.dp,
-            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+        // Gradient divider line at the top
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0f),
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0f)
+                        )
+                    )
+                )
         )
 
-        // Bottom app bar
-        BottomAppBar(
-            containerColor = MaterialTheme.colorScheme.background,
-            tonalElevation = 8.dp,
+        // Bottom app bar with glass effect
+        Surface(
+            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
+            tonalElevation = 0.dp,
             modifier = Modifier.fillMaxWidth()
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // Radio waves indicator (shows when playing)
+                CompactRadioWaves(
+                    isPlaying = isPlaying,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+
                 // Display selected station info
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = selectedStation.label,
                         style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.SemiBold
                     )
                     Text(
                         text = selectedStation.typeAsString(),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
-
                 }
 
-                // Play/Stop button
-                if (isPlaying) {
-                    // Stop button - visible when a station is playing
-                    IconButton(
-                        onClick = onStopPlayback,
-                        modifier = Modifier.padding(end = 4.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.StopCircle,
-                            contentDescription = "Stop",
-                            tint = MaterialTheme.colorScheme.error
-                        )
-                    }
-                } else {
-                    // Play button - visible when no station is playing
-                    IconButton(
-                        onClick = onPlayStation,
-                        modifier = Modifier.padding(end = 4.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.PlayCircle,
-                            contentDescription = "Play",
-                            tint = Color(0xFF34C759) // iOS system green
-                        )
-                    }
-                }
+                // Animated Play/Stop button
+                AnimatedPlayStopButton(
+                    isPlaying = isPlaying,
+                    onStop = onStopPlayback,
+                    onPlay = onPlayStation
+                )
 
                 IconButton(onClick = onNavigateToSettings) {
                     Icon(
                         imageVector = Icons.Default.Settings,
                         contentDescription = "Settings",
-                        tint = MaterialTheme.colorScheme.onSurface
+                        tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
                 }
 
-                // Refresh button (moved to bottom bar, after play/stop)
+                // Refresh button
                 IconButton(
                     onClick = onRefreshStations,
                     enabled = !isRefreshing,
                     modifier = Modifier.padding(end = 4.dp)
                 ) {
                     if (isRefreshing) {
-                        CircularProgressIndicator(
+                        GuyanaLoadingSpinner(
                             modifier = Modifier.size(24.dp),
                             strokeWidth = 2.dp
                         )
@@ -308,7 +413,7 @@ fun MainBottomBar(
                     Icon(
                         imageVector = Icons.Default.Info,
                         contentDescription = "About",
-                        tint = MaterialTheme.colorScheme.onSurface
+                        tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
                 }
             }
@@ -316,3 +421,72 @@ fun MainBottomBar(
     }
 }
 
+/**
+ * Animated play/stop button with scale bounce effect.
+ */
+@Composable
+fun AnimatedPlayStopButton(
+    isPlaying: Boolean,
+    onStop: () -> Unit,
+    onPlay: () -> Unit
+) {
+    // Scale animation on state change
+    var pressed by remember { mutableStateOf(false) }
+    val scale by animateFloatAsState(
+        targetValue = when {
+            pressed -> 0.85f
+            else -> 1f
+        },
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessHigh
+        ),
+        label = "playButtonScale"
+    )
+
+    IconButton(
+        onClick = {
+            pressed = true
+            if (isPlaying) onStop() else onPlay()
+        },
+        modifier = Modifier
+            .padding(end = 4.dp)
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
+    ) {
+        // Reset pressed state after animation
+        LaunchedEffect(pressed) {
+            if (pressed) {
+                delay(100)
+                pressed = false
+            }
+        }
+
+        AnimatedContent(
+            targetState = isPlaying,
+            transitionSpec = {
+                (scaleIn(initialScale = 0.8f) + fadeIn()) togetherWith
+                        (scaleOut(targetScale = 0.8f) + fadeOut())
+            },
+            label = "playStopTransition"
+        ) { playing ->
+            if (playing) {
+                Icon(
+                    imageVector = Icons.Filled.StopCircle,
+                    contentDescription = "Stop",
+                    tint = GuyanaColors.FlagRed,
+                    modifier = Modifier.size(32.dp)
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Rounded.PlayCircle,
+                    contentDescription = "Play",
+                    tint = GuyanaColors.FlagGreen,
+                    modifier = Modifier.size(32.dp)
+                )
+            }
+        }
+    }
+}
