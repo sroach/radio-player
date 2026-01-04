@@ -20,7 +20,10 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import radio_guyana_player.composeapp.generated.resources.Res
+import radio_guyana_player.composeapp.generated.resources.app_icon
+import radio_guyana_player.composeapp.generated.resources.flag_gy
 import radio_guyana_player.composeapp.generated.resources.guyanese_flag_radio_wave_icon
+import radio_guyana_player.composeapp.generated.resources.ic_launcher
 
 /**
  * About screen with animated section reveals.
@@ -134,7 +137,7 @@ fun AboutScreen(
             delay = 700
         ) {
             Text(
-                text = "© 2025 Radio Guyana Player",
+                text = "© 2026 Radio Guyana Player",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
                 textAlign = TextAlign.Center,
@@ -180,7 +183,7 @@ private fun AnimatedLogoSection(isVisible: Boolean) {
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(Res.drawable.guyanese_flag_radio_wave_icon),
+            painter = painterResource(Res.drawable.app_icon),
             contentDescription = "App Logo",
             modifier = Modifier
                 .size(120.dp)

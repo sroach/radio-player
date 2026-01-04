@@ -265,7 +265,7 @@ fun App(themeState: ThemeState? = null) = AppTheme {
                     }
                     is Screen.ReleaseNotes -> {
                         ReleaseNotesScreen(
-                            onNavigateToAbout = { navigationState.navigateToAbout() }
+
                         )
                     }
                 }

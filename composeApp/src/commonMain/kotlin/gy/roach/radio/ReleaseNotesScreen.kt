@@ -15,15 +15,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-/**
- * Release notes screen showing the latest features and updates of the app.
- *
- * @param onNavigateToAbout Callback to navigate back to the about screen
- */
+
 @Preview
 @Composable
 fun ReleaseNotesScreen(
-    onNavigateToAbout: () -> Unit
+    onNavigateToAbout: () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
 
@@ -40,6 +36,44 @@ fun ReleaseNotesScreen(
             modifier = Modifier.padding(top = 32.dp, bottom = 24.dp)
         )
 
+        // Latest version - 1.4
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+            shape = RoundedCornerShape(10.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            border = androidx.compose.foundation.BorderStroke(
+                width = 0.5.dp,
+                color = MaterialTheme.colorScheme.outline
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = "Version 1.4 (2026-01-04)",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                Text(
+                    text = "New features and improvements:",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                Text(
+                    text = "• Branding: App renamed from 'Guyana Radio Player' to 'GY Tunes'\n• UI: Added new launch screen with gradient background, app logo, and tagline\n• Assets: New Guyanese flag radio wave icon for enhanced theming\n• Audio: Improved playback error handling with graceful exception recovery\n• Desktop: Added platform-specific launcher icons (macOS, Windows, Linux)\n• Web: Cache-busting for WebAssembly assets and Skia compatibility improvements\n• Build: Updated to Java 21 and streamlined Kotlin/JS output",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                )
+            }
+        }
         // Latest version
         Card(
             modifier = Modifier
