@@ -1,0 +1,76 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Deep forest background gradient -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0D3B1E"/>
+      <stop offset="100%" style="stop-color:#051F10"/>
+    </linearGradient>
+    
+    <!-- Gold gradient for arrowhead -->
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD100"/>
+      <stop offset="50%" style="stop-color:#FFB800"/>
+      <stop offset="100%" style="stop-color:#E6A000"/>
+    </linearGradient>
+    
+    <!-- Subtle inner glow -->
+    <radialGradient id="glowGradient" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" style="stop-color:#FFD100;stop-opacity:0.15"/>
+      <stop offset="100%" style="stop-color:#FFD100;stop-opacity:0"/>
+    </radialGradient>
+    
+    <!-- Wave gradient -->
+    <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FFD100;stop-opacity:0.9"/>
+      <stop offset="100%" style="stop-color:#FFD100;stop-opacity:0.4"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- iOS rounded rect background - deep jungle green -->
+  <rect width="1024" height="1024" rx="224" ry="224" fill="url(#bgGradient)"/>
+  
+  <!-- Subtle gold glow in upper area -->
+  <rect width="1024" height="1024" rx="224" ry="224" fill="url(#glowGradient)"/>
+  
+  <!-- Golden Arrowhead - the dominant symbol -->
+  <g transform="translate(512, 480)">
+    <!-- Main arrowhead pointing right (like the flag) -->
+    <path d="M-180,0 L120,-220 L120,-140 L280,0 L120,140 L120,220 Z" 
+          fill="url(#goldGradient)"/>
+    
+    <!-- Inner red triangle (flag element) -->
+    <path d="M-100,0 L60,-120 L60,-80 L140,0 L60,80 L60,120 Z" 
+          fill="#CE1126"/>
+  </g>
+  
+  <!-- Radio waves emanating from arrowhead tip -->
+  <g transform="translate(792, 480)" opacity="0.85">
+    <!-- Wave 1 - innermost -->
+    <path d="M0,-60 Q40,-60 40,0 Q40,60 0,60" 
+          fill="none" stroke="url(#waveGradient)" stroke-width="8" stroke-linecap="round"/>
+    
+    <!-- Wave 2 -->
+    <path d="M20,-100 Q80,-100 80,0 Q80,100 20,100" 
+          fill="none" stroke="url(#waveGradient)" stroke-width="6" stroke-linecap="round" opacity="0.7"/>
+    
+    <!-- Wave 3 - outermost -->
+    <path d="M40,-140 Q120,-140 120,0 Q120,140 40,140" 
+          fill="none" stroke="url(#waveGradient)" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
+  </g>
+  
+  <!-- Subtle equalizer bars at bottom (music element) -->
+  <g transform="translate(512, 820)" opacity="0.6">
+    <rect x="-100" y="-40" width="16" height="40" rx="8" fill="#FFD100"/>
+    <rect x="-60" y="-70" width="16" height="70" rx="8" fill="#FFD100"/>
+    <rect x="-20" y="-55" width="16" height="55" rx="8" fill="#FFD100"/>
+    <rect x="20" y="-85" width="16" height="85" rx="8" fill="#FFD100"/>
+    <rect x="60" y="-50" width="16" height="50" rx="8" fill="#FFD100"/>
+    <rect x="100" y="-65" width="16" height="65" rx="8" fill="#FFD100"/>
+  </g>
+  
+  <!-- White accent line along arrowhead edge -->
+  <g transform="translate(512, 480)" opacity="0.3">
+    <path d="M-180,0 L120,-220" 
+          fill="none" stroke="#FFFFFF" stroke-width="3"/>
+  </g>
+</svg>
