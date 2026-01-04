@@ -324,6 +324,16 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "gy.roach.radio"
             packageVersion = "1.2.0"
+            // Set the icon paths for different OS distributions
+            macOS {
+                iconFile.set(project.file("launcher-icons/icon.icns"))
+            }
+            windows {
+                iconFile.set(project.file("launcher-icons/icon.ico"))
+            }
+            linux {
+                iconFile.set(project.file("launcher-icons/icon.png"))
+            }
         }
     }
 }
