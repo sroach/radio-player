@@ -30,13 +30,43 @@ fun ReleaseNotesScreen(
     ) {
         // Screen title
         Text(
-            text = "Release Notes",
+            text = "What's New in GY Tunes",
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground,
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(top = 32.dp, bottom = 24.dp)
         )
 
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
+            border = androidx.compose.foundation.BorderStroke(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = "Version 1.5 (Current)",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                Text(
+                    text = "• Refined Brand: Full transition to GY Tunes identity\n• Engine: Upgraded to Ktor 3.3.3 for high-performance networking\n• Multiplatform: Enhanced support for Android 15 (SDK 35) features\n• UI: Smoother transitions between Radio and Settings screens\n• Stability: Squashed those pesky notification bugs on macOS",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
         // Latest version - 1.4
         Card(
             modifier = Modifier
