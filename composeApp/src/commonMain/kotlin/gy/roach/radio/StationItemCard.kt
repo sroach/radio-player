@@ -27,7 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import gy.roach.radio.theme.GuyanaColors
 import gy.roach.radio.ui.MiniEqualizer
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.foundation.Canvas
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.drawscope.DrawScope
 
 @Composable
 fun StationItemCard(
@@ -36,13 +38,15 @@ fun StationItemCard(
     isPlaying: Boolean = false,
     onClick: () -> Unit = {}
 ) {
-    GlassCard(
+    AtmosphericCard(
         number = stationItem.index + 1,
         title = stationItem.label,
         body = stationItem.typeAsString(),
         isSelected = isSelected,
         isPlaying = isPlaying,
-        modifier = Modifier.fillMaxWidth().clickable { onClick() }
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
     )
 }
 
@@ -173,10 +177,7 @@ fun GlassCard(
 
             // Replace pulsing dot with animated equalizer when playing
             if (isPlaying) {
-                MiniEqualizer(
-                    isPlaying = true,
-                    tint = GuyanaColors.FlagGreen
-                )
+                PulsingPlayingIndicator()
             }
         }
     }
@@ -298,5 +299,212 @@ fun PulsingPlayingIndicator() {
                     shape = CircleShape
                 )
         )
+    }
+}
+
+/**
+ * A Brutalist-inspired alternative to the Glass Card.
+ * Focuses on high-contrast geometry and distinctive typography per pro.md rules.
+ */
+@Composable
+fun NeoGridCard(
+    number: Int,
+    title: String,
+    body: String,
+    modifier: Modifier = Modifier,
+    isSelected: Boolean,
+    isPlaying: Boolean = false
+) {
+    val containerColor = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
+    val accentColor = if (isPlaying) GuyanaColors.FlagGreen else MaterialTheme.colorScheme.primary
+
+    // Animate the "Accent Ribbon" width
+    val ribbonWidth by animateDpAsState(
+        targetValue = if (isPlaying) 8.dp else if (isSelected) 4.dp else 0.dp,
+        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        label = "ribbonWidth"
+    )
+
+    Box(
+        modifier = modifier
+            .padding(horizontal = 16.dp, vertical = 6.dp)
+            .height(IntrinsicSize.Min)
+            .background(containerColor, RoundedCornerShape(4.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
+    ) {
+        // 1. Sharp Accent Ribbon (High Impact Moment)
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(ribbonWidth)
+                .background(accentColor)
+                .align(Alignment.CenterStart)
+        )
+
+        // 2. Brutalist Number Background (Typography focus)
+        Text(
+            text = "$number".padStart(2, '0'),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .offset(x = 10.dp, y = 15.dp)
+                .graphicsLayer { alpha = 0.07f },
+            style = MaterialTheme.typography.displayLarge.copy(
+                fontWeight = FontWeight.Black,
+                fontSize = 80.sp
+            ),
+            softWrap = false
+        )
+
+        Row(
+            modifier = Modifier
+                .padding(start = ribbonWidth + 16.dp, top = 20.dp, bottom = 20.dp, end = 20.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                // 3. Distinctive Typography label
+                Text(
+                    text = title.uppercase(),
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Black,
+                        letterSpacing = 1.sp
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = body,
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        fontWeight = FontWeight.Medium
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
+            }
+
+            if (isPlaying) {
+                MiniEqualizer(
+                    isPlaying = isPlaying,
+                    tint = accentColor,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun AtmosphericCard(
+    number: Int,
+    title: String,
+    body: String,
+    modifier: Modifier = Modifier,
+    isSelected: Boolean,
+    isPlaying: Boolean = false
+) {
+    // Rule #4: 8-point grid constants
+    val outerPadding = 16.dp
+    val verticalGap = 8.dp
+    val outerRadius = 24.dp
+    val innerRadius = 8.dp // Rule #4: Outer(24) - Gap(16) = 8
+
+    // Rule #5 & #6: Depth without shadows
+    val baseSurface = MaterialTheme.colorScheme.surface
+    val cardBackground = if (isSelected) {
+        Brush.linearGradient(
+            colors = listOf(
+                MaterialTheme.colorScheme.surfaceVariant,
+                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f)
+            )
+        )
+    } else {
+        // Rule #7: Layered gradient for atmosphere
+        Brush.verticalGradient(
+            colors = listOf(
+                baseSurface,
+                baseSurface.copy(alpha = 0.95f)
+            )
+        )
+    }
+
+    Box(
+        modifier = modifier
+            .padding(horizontal = outerPadding, vertical = verticalGap)
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(outerRadius),
+            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+            border = BorderStroke(
+                width = if (isSelected) 2.dp else 1.dp,
+                color = if (isPlaying) GuyanaColors.FlagGreen else MaterialTheme.colorScheme.outline.copy(alpha = 0.1f)
+            )
+        ) {
+            // Rule #7: Geometric Pattern Layer (Using a simple Canvas for the "Pattern")
+            Box(modifier = Modifier.background(cardBackground)) {
+                Canvas(modifier = Modifier.matchParentSize().graphicsLayer { alpha = 0.03f }) {
+                    val dotSpacing = 16.dp.toPx()
+                    val horizontalDots = (size.width / dotSpacing).toInt()
+                    val verticalDots = (size.height / dotSpacing).toInt()
+
+                    for (x in 0..horizontalDots) {
+                        for (y in 0..verticalDots) {
+                            drawCircle(
+                                color = Color.Gray,
+                                radius = 1.dp.toPx(),
+                                center = Offset(x * dotSpacing, y * dotSpacing)
+                            )
+                        }
+                    }
+                }
+
+                Row(
+                    modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    // Rule #4: Mathematically nested corners for the number box
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(
+                                color = if (isPlaying) GuyanaColors.FlagGreen else MaterialTheme.colorScheme.secondaryContainer,
+                                shape = RoundedCornerShape(innerRadius)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "$number",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = if (isPlaying) Color.White else MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                    }
+
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Black,
+                                letterSpacing = 0.sp
+                            ),
+                            // FIX: Use onSurface to ensure it's dark in light mode and light in dark mode
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        // Rule #6: Visual grouping (Genre text)
+                        Text(
+                            text = body,
+                            style = MaterialTheme.typography.bodyMedium,
+                            // Sub-text should be slightly muted but still legible
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                        )
+                    }
+
+                    if (isPlaying) {
+                        MiniEqualizer(isPlaying = true, modifier = Modifier.size(24.dp))
+                    }
+                }
+            }
+        }
     }
 }

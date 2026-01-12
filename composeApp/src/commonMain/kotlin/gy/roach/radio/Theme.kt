@@ -12,6 +12,7 @@ import gy.roach.radio.theme.GoldenArrowheadTheme
 import gy.roach.radio.theme.KaieteurMistTheme
 import gy.roach.radio.theme.RainforestDuskTheme
 import gy.roach.radio.theme.StabroekNightsTheme
+import gy.roach.radio.theme.ThemeSettings
 
 
 fun buildLightColorScheme(theme: ColorTheme): ColorScheme = when (theme) {
@@ -384,10 +385,15 @@ internal val LocalThemeIsDark = compositionLocalOf { mutableStateOf(true) }
 
 @Composable
 internal fun AppTheme(
+    themeSettings: ThemeSettings,
     content: @Composable () -> Unit
 ) {
     val systemIsDark = isSystemInDarkTheme()
-    val isDarkState = remember(systemIsDark) { mutableStateOf(systemIsDark) }
+    // Collect the preference flow. Use system setting as default if preference is null.
+    val userPreference by themeSettings.isDarkTheme.collectAsState(initial = null)
+
+    val isDark = userPreference ?: systemIsDark
+    val isDarkState = remember(isDark) { mutableStateOf(isDark) }
     CompositionLocalProvider(
         LocalThemeIsDark provides isDarkState
     ) {

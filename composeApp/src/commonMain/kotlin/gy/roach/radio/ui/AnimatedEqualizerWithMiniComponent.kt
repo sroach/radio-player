@@ -2,14 +2,9 @@ package gy.roach.radio.ui
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -26,7 +21,6 @@ fun AnimatedEqualizer(
     barCount: Int = 4,
     barWidth: Dp = 4.dp,
     barSpacing: Dp = 3.dp,
-    size: Dp = 24.dp,
     baseColor: Color = GuyanaColors.FlagGreen
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "equalizer")
@@ -53,36 +47,67 @@ fun AnimatedEqualizer(
     // Static heights when not playing
     val staticHeights = listOf(0.6f, 0.4f, 0.8f, 0.5f)
 
-    Canvas(modifier = modifier.size(size)) {
-        val totalBarWidth = barWidth.toPx()
-        val spacing = barSpacing.toPx()
-        val totalWidth = (barCount * totalBarWidth) + ((barCount - 1) * spacing)
-        val startX = (size.toPx() - totalWidth) / 2
-        val maxHeight = size.toPx() * 0.8f
-        val bottomY = size.toPx() * 0.9f
+    Canvas(modifier = modifier) {
+        val canvasWidth = this.size.width
+        val canvasHeight = this.size.height
 
-        // Color gradient based on bar position (Guyanese colors)
-        val colors = listOf(
+        val totalBarWidthPx = barWidth.toPx()
+        val spacingPx = barSpacing.toPx()
+        val totalBarsWidth = (barCount * totalBarWidthPx) + ((barCount - 1) * spacingPx)
+
+        // 💡 Fix: Only center if there is actually enough room.
+        // In small list items, we default to 0 (left-aligned).
+        val startX = if (canvasWidth > totalBarsWidth) {
+            (canvasWidth - totalBarsWidth) / 2f
+        } else {
+            0f
+        }
+        val maxHeight = canvasHeight * 0.8f
+        val bottomY = canvasHeight * 0.9f
+
+        // 🇬🇾 Full Flag Palette Strategy
+        // We use Green (Jungle), Gold (Arrowhead), and Red (Zeal) for the main bars.
+        // We'll cycle through them for a vibrant look.
+        val flagColors = listOf(
             GuyanaColors.FlagGreen,
-            GuyanaColors.FlagGreen.copy(green = 0.7f),
             GuyanaColors.FlagGold,
-            GuyanaColors.FlagGold.copy(red = 1f, green = 0.75f)
+            GuyanaColors.FlagRed
         )
 
         for (i in 0 until barCount) {
-            val heightFraction = if (isPlaying) barHeights[i].value else staticHeights.getOrElse(i) { 0.5f }
+            val heightFraction = if (isPlaying) barHeights[i].value else staticHeights.getOrElse(i % staticHeights.size) { 0.5f }
             val barHeight = maxHeight * heightFraction
-            val x = startX + (i * (totalBarWidth + spacing))
+            val x = startX + (i * (totalBarWidthPx + spacingPx))
             val y = bottomY - barHeight
-            
-            val barColor = colors.getOrElse(i) { baseColor }
 
+            val barColor = flagColors[i % flagColors.size]
+
+            // 1. Draw the "Black Border/Shadow" (Unity)
+            // Drawing a slightly larger black bar underneath for a high-end outline look
+            drawRoundRect(
+                color = GuyanaColors.FlagBlack.copy(alpha = 0.4f),
+                topLeft = Offset(x - 1.dp.toPx(), y - 1.dp.toPx()),
+                size = androidx.compose.ui.geometry.Size(totalBarWidthPx + 2.dp.toPx(), barHeight + 2.dp.toPx()),
+                cornerRadius = androidx.compose.ui.geometry.CornerRadius(totalBarWidthPx / 2f)
+            )
+
+            // 2. Draw the Main Flag Color Bar
             drawRoundRect(
                 color = barColor,
                 topLeft = Offset(x, y),
-                size = Size(totalBarWidth, barHeight),
-                cornerRadius = CornerRadius(totalBarWidth / 2, totalBarWidth / 2)
+                size = androidx.compose.ui.geometry.Size(totalBarWidthPx, barHeight),
+                cornerRadius = androidx.compose.ui.geometry.CornerRadius(totalBarWidthPx / 2f)
             )
+
+            // 3. Draw the "White Highlight" (Waters)
+            // A tiny white dot at the top of the bar to make it look like sunlit water/glass
+            if (barHeight > 10.dp.toPx()) {
+                drawCircle(
+                    color = Color.White.copy(alpha = 0.5f),
+                    radius = totalBarWidthPx / 4f,
+                    center = Offset(x + (totalBarWidthPx / 2f), y + (totalBarWidthPx / 2f))
+                )
+            }
         }
     }
 }
@@ -102,7 +127,6 @@ fun MiniEqualizer(
         barCount = 3,
         barWidth = 3.dp,
         barSpacing = 2.dp,
-        size = 16.dp,
         baseColor = tint
     )
 }

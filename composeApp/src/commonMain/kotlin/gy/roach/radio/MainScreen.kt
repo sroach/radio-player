@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
@@ -37,6 +38,8 @@ fun MainScreen(
     audioPlayer: AudioPlayer,
     selectedStationIndex: Int = 0,
     isPlaying: Boolean = false,
+    isExpanded: Boolean,
+    onToggleExpansion: (Boolean) -> Unit,
     onStationSelected: (Int) -> Unit = {},
     onPlayingStateChanged: (Boolean) -> Unit = {},
     onNavigateToAbout: () -> Unit,
@@ -77,14 +80,28 @@ fun MainScreen(
         }
     }
 
-    // Animation state for staggered reveal
-    var animationTriggered by remember { mutableStateOf(false) }
+    // FIX 1: Preserve scroll position across recompositions
+    val listState = rememberLazyListState()
 
-    LaunchedEffect(filteredStations) {
-        // Reset and trigger animation when stations change
-        animationTriggered = false
-        delay(50) // Small delay to ensure reset
-        animationTriggered = true
+
+    // FIX 2: Only trigger animation ONCE on initial composition,
+    // or when station COUNT changes (e.g., after API refresh)
+    var animationTriggered by remember { mutableStateOf(false) }
+    var lastStationCount by remember { mutableStateOf(0) }
+
+
+    LaunchedEffect(filteredStations.size) {
+        // Only re-animate if the list size actually changed (new data loaded)
+        if (filteredStations.size != lastStationCount) {
+            lastStationCount = filteredStations.size
+            animationTriggered = false
+            delay(30)
+            animationTriggered = true
+        } else if (!animationTriggered) {
+            // First time load
+            delay(30)
+            animationTriggered = true
+        }
     }
 
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -102,6 +119,7 @@ fun MainScreen(
                 Spacer(modifier = Modifier.height(0.dp))
 
                 LazyColumn(
+                    state = listState, // FIX 3: Apply the remembered state
                     modifier = Modifier.fillMaxWidth().fillMaxHeight(),
                     verticalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
@@ -118,6 +136,7 @@ fun MainScreen(
                             isVisible = animationTriggered,
                             onClick = {
                                 onStationSelected(stationItem.index)
+                                onToggleExpansion(true) // Trigger expansion here
                             }
                         )
                     }

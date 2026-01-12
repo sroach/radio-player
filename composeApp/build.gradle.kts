@@ -238,6 +238,10 @@ kotlin {
             // icon extended
             implementation(libs.material.icons.core)
             implementation(libs.material.icons.extended)
+
+            implementation("com.russhwolf:multiplatform-settings:1.3.0")
+            implementation("com.russhwolf:multiplatform-settings-no-arg:1.3.0")
+            implementation("com.russhwolf:multiplatform-settings-coroutines:1.3.0")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -246,6 +250,7 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
             implementation(libs.slf4j.api)
+            implementation(libs.vlcj)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

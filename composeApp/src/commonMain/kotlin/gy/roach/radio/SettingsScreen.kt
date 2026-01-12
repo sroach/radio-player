@@ -31,10 +31,9 @@ import gy.roach.radio.theme.*
 /**
  * Settings screen with animated theme previews and micro-interactions.
  */
-@Preview
 @Composable
 fun SettingsScreen(
-    themeState: ModernThemeState = remember { ModernThemeState() },
+    themeState: ModernThemeState,
     onNavigateToMain: () -> Unit = {}
 ) {
     // Animation trigger for staggered reveal

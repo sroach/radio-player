@@ -17,7 +17,7 @@ import gy.roach.radio.ThemeState
 // Update the RadioGuyanaTheme function
 @Composable
 fun RadioGuyanaTheme(
-    themeState: ModernThemeState = remember { ModernThemeState() },
+    themeState: ModernThemeState,
     content: @Composable () -> Unit
 ) {
     val colorScheme = DynamicColorSchemeProvider.getColorScheme(
@@ -26,7 +26,7 @@ fun RadioGuyanaTheme(
     )
 
     CompositionLocalProvider(
-        LocalThemeState provides ThemeState().apply {
+        LocalThemeState provides remember { ThemeState() }.apply {
             isDarkTheme = themeState.isDarkTheme
         }
     ) {

@@ -3,36 +3,37 @@ package gy.roach.radio.theme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * Manages the current theme state of the application.
  * Follows iOS design patterns for theme management.
  */
-class ModernThemeState {
-    var selectedTheme by mutableStateOf(ColorTheme.GOLDEN_ARROWHEAD)
+class ModernThemeState(
+    private val themeSettings: ThemeSettings,
+    initialIsDark: Boolean,
+    initialTheme: ColorTheme = ColorTheme.GOLDEN_ARROWHEAD
+) {
+    var selectedTheme by mutableStateOf(initialTheme)
         private set
-    
-    var isDarkTheme by mutableStateOf(false)
+
+    var isDarkTheme by mutableStateOf(initialIsDark)
         private set
-    
-    /**
-     * Updates the selected color theme.
-     */
+
     fun selectTheme(theme: ColorTheme) {
         selectedTheme = theme
+        themeSettings.setColorTheme(theme.name)
     }
-    
-    /**
-     * Toggles between light and dark mode.
-     */
+
     fun toggleDarkMode() {
-        isDarkTheme = !isDarkTheme
+        val newMode = !isDarkTheme
+        isDarkTheme = newMode
+        themeSettings.setTheme(newMode) // Now synchronous - no coroutine needed
     }
-    
-    /**
-     * Sets the dark mode state explicitly.
-     */
+
     fun setDarkMode(isDark: Boolean) {
         isDarkTheme = isDark
+        themeSettings.setTheme(isDark)
     }
 }
