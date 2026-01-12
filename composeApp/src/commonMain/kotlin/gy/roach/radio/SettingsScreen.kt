@@ -10,9 +10,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,6 +24,10 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import gy.roach.radio.theme.*
+import org.jetbrains.compose.resources.vectorResource
+import radio_guyana_player.composeapp.generated.resources.Res
+import radio_guyana_player.composeapp.generated.resources.ic_check
+import radio_guyana_player.composeapp.generated.resources.ic_home
 
 /**
  * Settings screen with animated theme previews and micro-interactions.
@@ -408,7 +409,7 @@ private fun ThemePreviewCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Check,
+                        imageVector = vectorResource(Res.drawable.ic_check),
                         contentDescription = "Selected",
                         tint = Color.White,
                         modifier = Modifier.size(16.dp)
@@ -488,7 +489,7 @@ fun SettingsTopBar(
         navigationIcon = {
             IconButton(onClick = onNavigateToMain) {
                 Icon(
-                    imageVector = Icons.Default.Home,
+                    imageVector = vectorResource(Res.drawable.ic_home),
                     contentDescription = "Home",
                     tint = MaterialTheme.colorScheme.onSurface
                 )

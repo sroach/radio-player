@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,7 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import radio_guyana_player.composeapp.generated.resources.Res
+import radio_guyana_player.composeapp.generated.resources.ic_arrow_back
 
 
 @Preview
@@ -287,7 +288,7 @@ fun ReleaseNotesTopBar(
             // Back button - iOS style
             IconButton(onClick = onNavigateToAbout) {
                 Icon(
-                    imageVector = Icons.Default.ArrowBackIosNew,
+                    imageVector = vectorResource(Res.drawable.ic_arrow_back),
                     contentDescription = "Back",
                     tint = MaterialTheme.colorScheme.onSurface,
                 )

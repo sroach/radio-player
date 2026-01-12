@@ -4,8 +4,6 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,12 +16,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.resources.vectorResource
 import radio_guyana_player.composeapp.generated.resources.Res
 import radio_guyana_player.composeapp.generated.resources.app_icon
-import radio_guyana_player.composeapp.generated.resources.flag_gy
-import radio_guyana_player.composeapp.generated.resources.guyanese_flag_radio_wave_icon
-import radio_guyana_player.composeapp.generated.resources.ic_launcher
+import radio_guyana_player.composeapp.generated.resources.ic_home
 
 /**
  * About screen with animated section reveals.
@@ -404,7 +400,7 @@ fun AboutTopBar(
         navigationIcon = {
             IconButton(onClick = onNavigateToMain) {
                 Icon(
-                    imageVector = Icons.Default.Home,
+                    imageVector = vectorResource(Res.drawable.ic_home),
                     tint = MaterialTheme.colorScheme.onSurface,
                     contentDescription = "Home",
                 )

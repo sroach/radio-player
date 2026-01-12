@@ -16,10 +16,6 @@ import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -36,6 +32,11 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import gy.roach.radio.ui.AnimatedEqualizer
+import org.jetbrains.compose.resources.vectorResource
+import radio_guyana_player.composeapp.generated.resources.Res
+import radio_guyana_player.composeapp.generated.resources.ic_close
+import radio_guyana_player.composeapp.generated.resources.ic_pause
+import radio_guyana_player.composeapp.generated.resources.ic_play_arrow
 import kotlin.math.roundToInt
 
 @Composable
@@ -121,7 +122,7 @@ fun ExpandedPlayerView(
                 horizontalArrangement = Arrangement.End
             ) {
                 IconButton(onClick = onClose) {
-                    Icon(Icons.Default.Close, contentDescription = "Close", tint = MaterialTheme.colorScheme.primary)
+                    Icon(imageVector = vectorResource(Res.drawable.ic_close), contentDescription = "Close", tint = MaterialTheme.colorScheme.primary)
                 }
             }
 
@@ -207,7 +208,7 @@ fun ExpandedPlayerView(
                     )
                 ) {
                     Icon(
-                        imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                        imageVector = vectorResource(if (isPlaying) Res.drawable.ic_pause else Res.drawable.ic_play_arrow),
                         contentDescription = "Play/Pause",
                         modifier = Modifier.size(48.dp)
                     )

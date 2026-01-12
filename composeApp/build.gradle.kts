@@ -235,13 +235,10 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.logging)
-            // icon extended
-            implementation(libs.material.icons.core)
-            implementation(libs.material.icons.extended)
 
-            implementation("com.russhwolf:multiplatform-settings:1.3.0")
-            implementation("com.russhwolf:multiplatform-settings-no-arg:1.3.0")
-            implementation("com.russhwolf:multiplatform-settings-coroutines:1.3.0")
+            implementation(libs.multiplatform.settings)
+            implementation(libs.multiplatform.settings.no.arg)
+            implementation(libs.multiplatform.settings.coroutines)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

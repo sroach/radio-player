@@ -9,12 +9,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.StopCircle
-import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,7 +22,13 @@ import gy.roach.radio.theme.GuyanaColors
 import gy.roach.radio.ui.CompactRadioWaves
 import gy.roach.radio.ui.GuyanaLoadingSpinner
 import kotlinx.coroutines.delay
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.resources.vectorResource
+import radio_guyana_player.composeapp.generated.resources.Res
+import radio_guyana_player.composeapp.generated.resources.ic_info
+import radio_guyana_player.composeapp.generated.resources.ic_play_circle
+import radio_guyana_player.composeapp.generated.resources.ic_refresh
+import radio_guyana_player.composeapp.generated.resources.ic_settings
+import radio_guyana_player.composeapp.generated.resources.ic_stop_circle
 
 /**
  * Main screen of the app showing the radio stations list with staggered animations.
@@ -398,15 +398,13 @@ fun MainBottomBar(
                     onStop = onStopPlayback,
                     onPlay = onPlayStation
                 )
-
                 IconButton(onClick = onNavigateToSettings) {
                     Icon(
-                        imageVector = Icons.Default.Settings,
+                        imageVector = vectorResource(Res.drawable.ic_settings),
                         contentDescription = "Settings",
                         tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
                 }
-
                 // Refresh button
                 IconButton(
                     onClick = onRefreshStations,
@@ -420,7 +418,7 @@ fun MainBottomBar(
                         )
                     } else {
                         Icon(
-                            imageVector = Icons.Default.Refresh,
+                            imageVector = vectorResource(Res.drawable.ic_refresh),
                             contentDescription = "Refresh Stations",
                             tint = MaterialTheme.colorScheme.primary
                         )
@@ -430,7 +428,7 @@ fun MainBottomBar(
                 // About button
                 IconButton(onClick = onNavigateToAbout) {
                     Icon(
-                        imageVector = Icons.Default.Info,
+                        imageVector = vectorResource(Res.drawable.ic_info),
                         contentDescription = "About",
                         tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
@@ -493,14 +491,14 @@ fun AnimatedPlayStopButton(
         ) { playing ->
             if (playing) {
                 Icon(
-                    imageVector = Icons.Filled.StopCircle,
+                    imageVector = vectorResource(Res.drawable.ic_stop_circle),
                     contentDescription = "Stop",
                     tint = GuyanaColors.FlagRed,
                     modifier = Modifier.size(32.dp)
                 )
             } else {
                 Icon(
-                    imageVector = Icons.Rounded.PlayCircle,
+                    imageVector = vectorResource(Res.drawable.ic_play_circle),
                     contentDescription = "Play",
                     tint = GuyanaColors.FlagGreen,
                     modifier = Modifier.size(32.dp)

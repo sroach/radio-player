@@ -6,8 +6,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,7 +14,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import gy.roach.radio.StationItem
 import gy.roach.radio.viewmodel.StationViewModel
+import org.jetbrains.compose.resources.vectorResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import radio_guyana_player.composeapp.generated.resources.Res
+import radio_guyana_player.composeapp.generated.resources.ic_refresh
 
 /**
  * A screen that demonstrates fetching and displaying stations using the HTTP client.
@@ -61,7 +62,7 @@ fun StationScreen(
                 enabled = !isLoading
             ) {
                 Icon(
-                    imageVector = Icons.Default.Refresh,
+                    imageVector = vectorResource(Res.drawable.ic_refresh),
                     contentDescription = "Refresh stations"
                 )
             }

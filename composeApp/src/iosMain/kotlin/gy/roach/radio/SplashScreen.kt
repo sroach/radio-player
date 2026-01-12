@@ -18,6 +18,7 @@ import gy.roach.radio.theme.GradientBackgrounds
 import gy.roach.radio.theme.GradientBackgrounds.goldenArrowheadDark
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.random.Random
 
 /**
@@ -134,5 +135,13 @@ private fun AnimatedEqualizer(isVisible: Boolean, modifier: Modifier = Modifier)
                     }
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun SplashScreenPreview() {
+    MaterialTheme {
+        SplashScreen(onSplashFinished = {})
     }
 }
