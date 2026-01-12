@@ -1,18 +1,59 @@
-SVG="composeApp/src/commonMain/composeResources/drawable/app_icon.svg"
-DEST="iosApp/iosApp/Assets.xcassets/AppIcon.appiconset"
+# Source PNGs from drawable folder
+SRC_DARK="composeApp/src/commonMain/composeResources/drawable/app_icon.png"
+SRC_LIGHT="composeApp/src/commonMain/composeResources/drawable/app_icon_light.png"
+SRC_TINTED="composeApp/src/commonMain/composeResources/drawable/app_icon_tinted.png"
 
-for size in 16 20 29 32 40 48 50 55 57 58 60 64 66 72 76 80 87 88 92 100 102 108 114 120 128 144 152 167 172 180 196 216 234 256 258 512 1024; do
-  magick -background none "$SVG" -resize ${size}x${size} "$DEST/${size}.png"
-done
+# Destination paths
+APPICON_DEST="iosApp/iosApp/Assets.xcassets/AppIcon.appiconset"
+LOCK_DEST="iosApp/iosApp/Assets.xcassets/lockscreen.imageset"
+FAV_DEST="iosApp/iosApp/Assets.xcassets/favicon.imageset"
 
-DESTLOCK="iosApp/iosApp/Assets.xcassets/lockscreen.imageset"
+# Clean and ensure directories exist
+rm -rf "$APPICON_DEST"/*
+mkdir -p "$APPICON_DEST"
+mkdir -p "$LOCK_DEST"
+mkdir -p "$FAV_DEST"
 
-for f in "1024" "1024 1" "1024 2" "1024 3" "1024 4" "1024 5" "1024 6" "1024 7" "1024 8"; do
-  magick -background none "$SVG" -resize 1024x1024 "$DESTLOCK/$f.png"
-done
+# 1. Copy App Icons (Single 1024x1024 assets)
+cp "$SRC_LIGHT" "$APPICON_DEST/icon_light_1024.png"
+cp "$SRC_DARK" "$APPICON_DEST/icon_dark_1024.png"
+cp "$SRC_TINTED" "$APPICON_DEST/icon_tinted_1024.png"
 
-DESTFAV="iosApp/iosApp/Assets.xcassets/favicon.imageset"
+# 2. Lockscreen Imageset
+cp "$SRC_LIGHT" "$LOCK_DEST/lockscreen.png"
 
-magick -background none "$SVG" -resize 64x64 "$DESTFAV/favicon.png"
-magick -background none "$SVG" -resize 128x128 "$DESTFAV/favicon@2x.png"
-magick -background none "$SVG" -resize 192x192 "$DESTFAV/favicon@3x.png"
+# 3. Favicon Resizing (Required sizes for web/pwa)
+magick "$SRC_LIGHT" -resize 64x64 "$FAV_DEST/favicon.png"
+magick "$SRC_LIGHT" -resize 128x128 "$FAV_DEST/favicon@2x.png"
+magick "$SRC_LIGHT" -resize 192x192 "$FAV_DEST/favicon@3x.png"
+
+# --- GENERATE LOCKSCREEN ---
+mkdir -p "$LOCK_DEST"
+cp "$SRC_LIGHT" "$LOCK_DEST/lockscreen.png"
+cat <<EOF > "$LOCK_DEST/Contents.json"
+{
+  "images": [
+    {"filename": "lockscreen.png", "idiom": "universal", "scale": "1x"},
+    {"idiom": "universal", "scale": "2x"},
+    {"idiom": "universal", "scale": "3x"}
+  ],
+  "info": {"author": "xcode", "version": 1}
+}
+EOF
+
+# --- GENERATE FAVICON ---
+mkdir -p "$FAV_DEST"
+magick "$SRC_LIGHT" -resize 64x64 "$FAV_DEST/favicon.png"
+magick "$SRC_LIGHT" -resize 128x128 "$FAV_DEST/favicon@2x.png"
+magick "$SRC_LIGHT" -resize 192x192 "$FAV_DEST/favicon@3x.png"
+cat <<EOF > "$FAV_DEST/Contents.json"
+{
+  "images": [
+    {"filename": "favicon.png", "idiom": "universal", "scale": "1x"},
+    {"filename": "favicon@2x.png", "idiom": "universal", "scale": "2x"},
+    {"filename": "favicon@3x.png", "idiom": "universal", "scale": "3x"}
+  ],
+  "info": {"author": "xcode", "version": 1}
+}
+EOF
+echo "Master icons copied. Please ensure Xcode is set to 'Single Size' for AppIcon."

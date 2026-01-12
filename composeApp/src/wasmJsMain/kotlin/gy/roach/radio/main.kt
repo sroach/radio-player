@@ -2,21 +2,18 @@ package gy.roach.radio
 
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.window.CanvasBasedWindow
 import androidx.compose.ui.window.ComposeViewport
+import gy.roach.radio.theme.ThemeSettings
 import kotlinx.browser.document
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-    ComposeViewport(document.body!!) {
-        // Create a theme state that will be shared with the App
-        val themeState = remember { ThemeState() }
+    ComposeViewport(content = {
+            // Create the theme settings instance for Web
+            val themeSettings = remember { ThemeSettings() }
 
-        // Sync the theme state with web CSS
-        SyncThemeWithWebCss(themeState)
-
-        // Use RadioGuyanaTheme with our theme state
-        RadioGuyanaTheme(darkTheme = themeState.isDarkTheme) {
-            App(themeState = themeState)
-        }
-    }
+            // Pass themeSettings instead of themeState
+            App(themeSettings = themeSettings)
+        })
 }

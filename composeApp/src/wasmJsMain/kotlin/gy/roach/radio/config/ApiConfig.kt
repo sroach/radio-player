@@ -3,6 +3,7 @@ package gy.roach.radio.config
 /**
  * Gets the APP_CONFIG object from window
  */
+@OptIn(ExperimentalWasmJsInterop::class)
 private fun getAppConfigJs(): String = js("JSON.stringify(window.APP_CONFIG || {})")
 
 private fun getAppConfig(): Any? {
@@ -17,6 +18,7 @@ private fun getAppConfig(): Any? {
 /**
  * Gets the STATIONS_API_KEY from APP_CONFIG
  */
+@OptIn(ExperimentalWasmJsInterop::class)
 private fun getStationsApiKeyJs(): String = js("window.APP_CONFIG && window.APP_CONFIG.STATIONS_API_KEY ? window.APP_CONFIG.STATIONS_API_KEY : ''")
 
 private fun getStationsApiKeyFromConfig(): String? {
@@ -27,6 +29,7 @@ private fun getStationsApiKeyFromConfig(): String? {
 /**
  * Logs an error to the console
  */
+@OptIn(ExperimentalWasmJsInterop::class)
 private fun logErrorToConsoleJs(message: String): Unit = js("console.error(message)")
 
 private fun logErrorToConsole(message: String) {

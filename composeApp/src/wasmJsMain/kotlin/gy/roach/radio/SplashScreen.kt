@@ -31,6 +31,7 @@ import radio_guyana_player.composeapp.generated.resources.equalizer1
  * @param onSplashFinished Callback to execute when the splash screen animation is complete
  */
 
+@OptIn(ExperimentalWasmJsInterop::class)
 @Composable
 actual fun SplashScreen(onSplashFinished: () -> Unit) {
     // State to track if the splash screen animation is complete

@@ -10,6 +10,7 @@ class WasmJsAudioPlayer : AudioPlayer {
     private var audioElement: HTMLAudioElement? = null
     private var playing = false
 
+    @OptIn(ExperimentalWasmJsInterop::class)
     override fun play(url: String) {
         // Stop any currently playing audio
         stop()
