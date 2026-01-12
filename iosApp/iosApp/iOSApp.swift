@@ -4,7 +4,7 @@ import SwiftUI
 struct iOSApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView().ignoresSafeArea(.all)
+            ContentView() // Let Compose handle the splash state internally
         }
     }
 }
